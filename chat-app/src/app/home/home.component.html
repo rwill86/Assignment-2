@@ -1,0 +1,59 @@
+<!-- Nav Bar -->
+     <div class="navContent">
+         <div class="navItem"><a routerLink="#"><i class="fas fa-home"></i> Home</a></div>
+		 <div class="navItem"><a routerLink="#"><i class="fas fa-user"></i> {{user.username}}</a></div>
+	     <div class="navItem right"><a  (click)="logout()" routerLink="login">Sign Out</a></div>
+     </div>
+<!-- Main Body -->
+<div class="subWrap">
+<!-- Groups -->
+     <div class="groupWrap">
+         <div class="mainGroupContent">
+	     <!-- Groups Section -->
+	         <div class="h1">Groups</div>             
+             <!-- New Group Form -->
+             <form (submit)="createGroup($event)">
+			     <div class="formLabel">Create Group</div>
+                 <input [(ngModel)]="newGroupName" type="text" class="formInput" name="newGroupName"  placeholder="New Group">
+			     <button type="submit" name="submit" class="chatButton">Create</button>
+             </form>			 
+			  <!-- List of Groups -->
+			 <div class="h2">List</div>
+             <div class="groupListContent" *ngFor="let group of groups">
+                 <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
+                 <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
+                 <button type="button" class="deleteButton" (click)="deleteGroup(group.name)" *ngIf="group.role >= 1"><i class="fas fa-trash-alt"></i></button>
+             </div>
+	     </div>
+     </div>
+	 <!-- Channels Column -->
+     <div class="channelWrap">
+	     <div class="mainChannelContent">	 
+		     <div class="h1">Channels</div>    
+		     <!-- New Channel Form -->
+			 <form (submit)="createChannel($event)">
+			     <div class="formLabel">Create Channel</div>
+                 <input class="formInput" name="newGroupName" placeholder="New Channel" type="text" [(ngModel)]="newGroupName">
+                 <button class="chatButton">Create</button>
+             </form>
+			 <!-- List of Channels -->
+			 <div class="h2">List</div>
+             <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)"></app-channels>
+		 </div>	    
+	 </div>
+     <!-- Chat Column -->
+     <div class="chatWrap">
+         <app-chat [channel]=selectedChannel></app-chat>
+     </div>
+     <!-- Members Column -->
+	 <div class="userWrap">
+         <div class="mainUserContent">
+             <div class="h1">Users</div>
+		         <div class="userlist" *ngIf="selectedChannel != null">
+			         <div class="userOnline" *ngFor="let member of selectedChannel.members">
+				         <i class="fas fa-plug"></i> {{ member }}
+			         </div>
+                 </div>
+             </div>
+         </div>
+ </div>

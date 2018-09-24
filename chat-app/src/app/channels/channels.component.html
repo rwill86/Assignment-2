@@ -1,0 +1,4 @@
+<div *ngIf="channels.length == 0" class="h2">No channels available</div>
+<div class="channelListContent" *ngFor="let channel of channels">
+     <button  (click)="changeChannel(channel.name)" type="button" class="midButton"><i class="fas fa-arrow-right"></i> {{ channel.name }}</button>
+</div>
