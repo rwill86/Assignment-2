@@ -15,21 +15,22 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-  private api:string = 'http://localhost:3000/api/';
+     private api:string = 'http://localhost:3000/api/';
 
-  constructor(private http:HttpClient) {}
+     public constructor(private http:HttpClient){		 
+	 }
 
-  login(data){
-    let body = JSON.stringify(data);
-    return this.http.post(this.api + 'login', body, httpOptions);
-  }
+     public login(data){
+         var body = JSON.stringify(data);
+         return this.http.post(this.api + 'login', body, httpOptions);
+     }
 
-  create(data){
-    let body = JSON.stringify(data);
-    return this.http.post(this.api + 'user/create', body, httpOptions);
-  }
+     public create(data){
+         var body = JSON.stringify(data);
+         return this.http.post(this.api + 'user/create', body, httpOptions);
+     }
 
-  delete(username){
-    return this.http.delete(this.api + 'user/delete/'+username);
-  }
+     delete(username){
+         return this.http.delete(this.api + 'user/delete/'+username);
+     }
 }

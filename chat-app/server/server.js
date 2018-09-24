@@ -5,8 +5,10 @@ const app = express();
 const fs = require('fs')
 const http = require('http').Server(app);;
 const dataFile = './data.json';
-//const io = require('socket.io')(http);
+const formidable = require('formidable');
+const io = require('socket.io')(http);
 require('./listen.js')(http);
+require('./uploads.js')(app, formidable);
 const dataFormat = 'utf8';
 // CORS
 // We are enabling CORS so that our 'ng serve' Angular server can still access
@@ -22,6 +24,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Basic Routes
 app.use(express.static(path.join(__dirname, '../dist/chat-app')));
+app.use(express.static(path.join(__dirname, './images')));
+
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
 });

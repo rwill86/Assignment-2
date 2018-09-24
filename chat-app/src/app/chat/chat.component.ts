@@ -4,7 +4,7 @@ import { SocketService } from '../socket/socket.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-//import { imageService } from '../image/image.service';
+import { ImageService } from '../image/image.service';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -18,10 +18,10 @@ export class ChatComponent implements OnInit {
 	 public connection;
 	 public selectedfile = null;
 	 public imagepath = '';
-     constructor(private router:Router, private form:FormsModule, private sockServ:SocketService){
+     public constructor(private router:Router, private form:FormsModule, private sockServ:SocketService private imgServ:ImageService){
 	 }
 
-     ngOnInit(){
+     public  ngOnInit(){
      }
 	 
 	 public onFileSelected(event){
@@ -32,7 +32,10 @@ export class ChatComponent implements OnInit {
 	 public onUpload(){
 		 const fd = new FormData();
 		 fd.append('image', this.selectedfile, this.selectedfile.name);
-		 //this.imgupload 
+		 this.imgServ.imgupload(fd).subscribe(res =>{
+			 this.imagepath = res.data.filename;
+			 console.log(res.data.filename + ' , ' + res.data.size)
+		 }); 
 	 }
 	 
 	 public getMes(){
