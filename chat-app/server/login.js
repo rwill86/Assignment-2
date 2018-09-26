@@ -4,11 +4,11 @@
 // ============================================
 module.exports = function(){
      this.data;
-     this.findUser = function(username){
+     this.findUser = function(username, password){
          var match = false;
          var users = data.users;
          for(var i = 0; i < users.length; i++){
-             if(users[i].username == username){
+             if(users[i].username == username || user[i].password == password){
                  match = users[i];
              }
          }

@@ -15,15 +15,17 @@ export class ChatComponent implements OnInit {
      @Input() channel;
 	 public messages = [];
 	 public message:string;
+	 public userName;
 	 public connection;
 	 public selectedfile = null;
 	 public imagepath = '';
-     public constructor(private router:Router, private form:FormsModule, private sockServ:SocketService private imgServ:ImageService){
+     public constructor(private router:Router, private form:FormsModule, private sockServ:SocketService, private imgServ:ImageService){
 	 }
 
-     public  ngOnInit(){
+     public ngOnInit(){
+		 this.getMes();
      }
-	 
+	 //Upload image
 	 public onFileSelected(event){
 		 console.log(event);
 		 this.selectedfile = event.target.files[0];
@@ -37,7 +39,7 @@ export class ChatComponent implements OnInit {
 			 console.log(res.data.filename + ' , ' + res.data.size)
 		 }); 
 	 }
-	 
+	 //Send and get messages
 	 public getMes(){
 		 this.connection = this.sockServ.getMessages().subscribe((message:string) => {
 		     this.messages.push(message);
@@ -46,14 +48,22 @@ export class ChatComponent implements OnInit {
 	 }
 	 
 	 public sendMessage(){
+		 this.userName = sessionStorage.getItem('username');
 		 if(this.message !== ''){
 		     var d = new Date();
 		     var h = d.getHours();
 		     var m = d.getMinutes();
+			 console.log('Sending message');
 		     this.sockServ.sendMessages(' - ' + this.message + ' - ' + h + ':' + m);
 	     } else{
-			 //var me = document.getElementById('message');
-			 //me.style.border = '2px solid #C70039';
+			 var me = document.getElementById('mes');
+			 me.style.border = '2px solid #C70039';
+		 }
+	 }	 
+	 //Destory connection
+	 public ngOnDestory(){
+		 if(this.connection){
+			 this.connection.unsubscribe();
 		 }
 	 }
 
