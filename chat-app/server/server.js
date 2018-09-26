@@ -21,22 +21,30 @@ var corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 };
 
-require('./listen.js')(http);
-require('./socket.js')(app, io);
-//require('./uploads.js')(app, formidable);
-
 app.use(cors(corsOptions))
 // Body-Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Basic Routes
 app.use(express.static(path.join(__dirname, '../dist/chat-app')));
-app.use(express.static(path.join(__dirname, './images')));
+app.use('/images', express.static(path.join(__dirname, './userimages')));
+require('./listen.js')(http);
+require('./socket.js')(app, io);
+require('./upload.js')(app, formidable);
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
 });
+
 app.get('/home', function(req,res){
+    res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
+});
+
+app.get('/login', function(req,res){
+    res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
+});
+
+app.get('/user', function(req,res){
     res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
 });
 // Login Module
@@ -101,7 +109,7 @@ app.post('/api/user', function (req, res) {
      writer.addUser(newUser, res);
 });
 
-app.put('/api/user/:id', function (req, res) {
+app.put('/api/user/:id', function (req, res){
      console.log('update user');
      var updater = require('./update.js')(MongoClient, dbURL);
      updater.updateUser(req.body, res);
@@ -131,7 +139,7 @@ app.post('/api/login', function(req, res){
      });
 });
 // Group APIs
-app.post('/api/groups', function(req,res){
+app.post('/api/groups', function(req, res){
     // We want to authenticate again -- usually you'd use a token
      fs.readFile(dataFile, dataFormat, function(err, data){
          data = JSON.parse(data);
@@ -178,7 +186,7 @@ app.post('/api/group/create', function(req, res){
                  'admins':[],
                  'members':[]
              }
-             g.push(newGroup)
+             g.push(newGroup);
              readData.groups = g;
              var json = JSON.stringify(readData);      
              // Write the updated data to the JSON file.

@@ -8,7 +8,7 @@ module.exports = function(){
          var match = false;
          var users = data.users;
          for(var i = 0; i < users.length; i++){
-             if(users[i].username == username || user[i].password == password){
+             if(users[i].username == username && users[i].password == password){
                  match = users[i];
              }
          }

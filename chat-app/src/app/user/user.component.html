@@ -1,0 +1,23 @@
+<!-- Nav Bar -->
+     <div class="navContent">
+         <div class="navItem"><a routerLink="home"><i class="fas fa-home"></i> Home</a></div>
+		 <div class="navItem"><a (click)="userAccount()" routerLink="user"><i class="fas fa-user"></i> {{user.username}}</a></div>
+	     <div class="navItem right"><a (click)="logout()" routerLink="login">Sign Out</a></div>
+     </div>
+     <div class="groupWrap">
+         <div class="mainGroupContent">
+	     <!-- Groups Section -->
+	         <div class="h1">Account</div> 
+			 <div class="h2">Username: {{user.username}}</div> 		
+             <div class="userBiglogo">
+				 <img src="images\{{user.userlogo}}" alt="userLogo"/>
+		     </div>			 
+		      <form>
+		         <div class="formLabel">Upload Logo</div>			     
+				 <label for="uploadfile" class="chatButton" style="float:left;">
+				     <i class="far fa-image"></i><input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
+				 </label>
+		         <button (click)="onUpload()" type="submit" name="submit" class="chatButton">Upload</button>
+		     </form>
+		 </div>
+     </div>		 

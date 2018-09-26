@@ -13,17 +13,26 @@ import { ImageService } from '../image/image.service';
 
 export class ChatComponent implements OnInit {
      @Input() channel;
+	 public user
 	 public messages = [];
 	 public message:string;
-	 public userName;
 	 public connection;
 	 public selectedfile = null;
 	 public imagepath = '';
+	 
      public constructor(private router:Router, private form:FormsModule, private sockServ:SocketService, private imgServ:ImageService){
 	 }
 
      public ngOnInit(){
-		 this.getMes();
+		 if(sessionStorage.getItem('user') === null){
+             // User has not logged in, reroute to login
+             this.router.navigate(['/login']);
+         } else{
+		     var user = JSON.parse(sessionStorage.getItem('user'));
+             this.user = user;
+             console.log(this.user);
+		     this.getMes();
+		 }
      }
 	 //Upload image
 	 public onFileSelected(event){
@@ -42,19 +51,18 @@ export class ChatComponent implements OnInit {
 	 //Send and get messages
 	 public getMes(){
 		 this.connection = this.sockServ.getMessages().subscribe((message:string) => {
-		     this.messages.push(message);
+			 this.messages.push(message);
 			 this.message = '';
 		 });
 	 }
 	 
 	 public sendMessage(){
-		 this.userName = sessionStorage.getItem('username');
 		 if(this.message !== ''){
 		     var d = new Date();
 		     var h = d.getHours();
 		     var m = d.getMinutes();
 			 console.log('Sending message');
-		     this.sockServ.sendMessages(' - ' + this.message + ' - ' + h + ':' + m);
+		     this.sockServ.sendMessages(this.user.username  + ' - ' + this.message + ' - ' + h + ':' + m);
 	     } else{
 			 var me = document.getElementById('mes');
 			 me.style.border = '2px solid #C70039';

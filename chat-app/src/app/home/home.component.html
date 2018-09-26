@@ -1,8 +1,8 @@
 <!-- Nav Bar -->
      <div class="navContent">
-         <div class="navItem"><a routerLink="#"><i class="fas fa-home"></i> Home</a></div>
-		 <div class="navItem"><a routerLink="#"><i class="fas fa-user"></i> {{user.username}}</a></div>
-	     <div class="navItem right"><a  (click)="logout()" routerLink="login">Sign Out</a></div>
+         <div class="navItem"><a routerLink="home"><i class="fas fa-home"></i> Home</a></div>
+		 <div class="navItem"><a (click)="userAccount()" routerLink="user"><i class="fas fa-user"></i> {{user.username}}</a></div>
+	     <div class="navItem right"><a (click)="logout()" routerLink="login">Sign Out</a></div>
      </div>
 <!-- Main Body -->
 <div class="subWrap">

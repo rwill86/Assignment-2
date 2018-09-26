@@ -3,12 +3,12 @@
      <div class="subloginContent">
          <div class="h2">Please sign in to chat</div>
          <form (submit)="loginUser($event)">
-		     <div id="error"> </div>
+		     <div id="error"></div>
                  <div class="formLabel">Username</div>
                  <input [(ngModel)]="username" type="text" class="formInput" id="username" aria-describedby="emailHelp" placeholder="Username" name="username">
                  <div class="formLabel">Password</div>
                  <input [(ngModel)]="password" type="password" class="formInput" id="password" placeholder="Password" name="password">
-             <button type="submit" name="submit" class="formButton">Login</button>
-      </form>
+                 <button type="submit" name="submit" class="formButton">Login</button>
+         </form>
      </div>
 </div>

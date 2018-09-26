@@ -13,12 +13,11 @@ module.exports = function(app, io){
 		 //Channel message
 		 socket.on('channel-message', function(id, msg){
 			 socket.broadcast.to(id).emit('my message', msg);
-		 });
-		 
+		 });	 
 		 //Disconnect user
 		 socket.on('disconnect', function(){
 			 console.log('user disconnect.');			
-			 socket.leave('lobby');
+			 //socket.leave('lobby');
 			 //socket.to('lobby').emit('user has disconnect.', socket.id);
 		 });      
 		 //Add message

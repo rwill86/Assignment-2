@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../users/user.service';
+import { UserService } from '../user/user.service';
 import { $ } from 'protractor';
 
 @Component({
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
      }
  
      ngOnInit(){
-         if(sessionStorage.getItem('user') !== null){
+         if(sessionStorage.getItem('user') !== null || localStorage.getItem('user') !== null){
              this.router.navigate(['/home']);
          }
      }
@@ -35,11 +35,14 @@ export class LoginComponent implements OnInit {
                  console.log(data);
                  if(data != false){
                      var temp = JSON.stringify(data);
-                     sessionStorage.setItem('user', temp);         
+                     sessionStorage.setItem('user', temp); 
+                     localStorage.setItem('user', temp);					 
                      this.router.navigate(['/home']); 
                  } else{
                      var message = 'Your username and password did not match.';
-                     document.getElementById('error').innerHTML = '<div class="alert alert-dismissible alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Oh snap!</strong> '+ message +'</div>';
+					 document.getElementById('username').style.border = '2px solid #C70039';
+		             document.getElementById('email').style.border = '2px solid #C70039';
+                     document.getElementById('error').innerHTML = message;
                  }
              },
              error => {

@@ -12,9 +12,13 @@ html, body{
 }
 /* img style */
 img{
-     width: 100%; 
-     height: 100%;
-  	 image-rendering: pixelated;		
+    width: 100%; 
+    height: 100%;
+  	image-rendering: pixelated;		
+}
+
+input[type="file"]{
+	display:none;
 }
 /* .wrap style */
 .wrap{
@@ -23,7 +27,7 @@ img{
 	position: relative;
 	margin: 0 auto;
 	padding: 0px;
-	padding-top: 90px;
+	padding-top: 15px;
 }	
 /* .supwrap style */
 .subwrap{
@@ -227,6 +231,7 @@ img{
 /* chatButton style */
 .chatButton{
 	margin: 0 auto;
+	display: inline-block;
     color: #FFFFFF;
 	padding: 10px 20px;
 	background: #C70039;
@@ -267,12 +272,22 @@ img{
 	background: #000000;
 	border: 1px solid #C70039;
 }
-/* .userMessage style */
+/* .userLogo style */
 .userlogo{
 	position: relative;
     margin-right: 5px;
     width: 40px; 
     height: 35px;
+    border: 1px solid #000000; 
+    border-radius: 5px;
+	overflow: hidden;
+}
+/* .userBigLogo style */
+.userBiglogo{
+	position: relative;
+    margin-right: 5px;
+    width: 160px; 
+    height: 120px;
     border: 1px solid #000000; 
     border-radius: 5px;
 	overflow: hidden;

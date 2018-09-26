@@ -29,8 +29,13 @@ export class UserService {
          var body = JSON.stringify(data);
          return this.http.post(this.api + 'user/create', body, httpOptions);
      }
+	 
+	 //public update(data){
+         //var body = JSON.stringify(data);
+        // return this.http.put(this.api +'user/' + data.id, body, httpOptions);
+     //}
 
-     delete(username){
-         return this.http.delete(this.api + 'user/delete/'+username);
-     }
+     //public deleteUser(data){
+         //return this.http.delete(this.api + 'user/delete/' + data._id;
+     //}
 }

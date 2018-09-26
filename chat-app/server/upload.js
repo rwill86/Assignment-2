@@ -1,6 +1,6 @@
 module.exports = function(app, formidable){
 	 app.post('/api/upload', (req, res) => {
-		 var form = new formidable.IncomingForm({uploadDir: './images'});
+		 var form = new formidable.IncomingForm({uploadDir: './userimages'});
 		 form.keepExtenions = true;
 		 
 		 form.on('error', function(err){

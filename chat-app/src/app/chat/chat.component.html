@@ -3,13 +3,13 @@
      <div class="h2" *ngIf="channel != null">{{channel.name}}</div>
      <div class="subMessageContent">
          <div class="messageListContent">
-             <div class="black" *ngIf="!message">No messages Yet.</div>
-		     <div class="userMessage" *ngFor="let message of messages;">
+             <div class="black" *ngIf="!messages">No messages Yet.</div>
+		     <div class="userMessage" *ngFor="let message of messages">
 			     <div class="userlogo">
-				     <img src="" alt="userLogo"/>
+				     <img src="images\{{imagepath}}" alt="userLogo"/>
 				 </div>
 			     <div class="userTextBox">
-				     {{message}}
+				     {{message.text}}
 				 </div>
 			 </div>
 		 </div>
@@ -17,11 +17,11 @@
      <div class="chatMessageContent">
 	     <input [(ngModel)]="message" class="messageInput" name="message" id="mes" placeholder="What's on your mind."/> 
 		 <form>
-		     <input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
-		     <button (click)="onUpload()" type="submit" name="submit" class="chatButton"><i class="far fa-image"></i></button>
-			 <img src="images/{{imagepath}}"/>
-		 </form>
-		 
-		 <button (click)="sendMessage()" type="submit" name="submit" class="chatButton">Send</button>
+		     <label for="uploadfile" class="chatButton" style="float:left;">
+				 <i class="far fa-image"></i><input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
+			 </label>
+		     <!--<button (click)="onUpload()" type="submit" name="submit" class="chatButton"><i class="far fa-image"></i></button>-->
+			 <button (click)="sendMessage()" type="submit" name="submit" class="chatButton">Send</button>
+		 </form>	 
      </div>
 </div>
