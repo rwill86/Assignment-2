@@ -51,8 +51,11 @@
              <div class="h1">Users</div>
 		         <div class="userlist" *ngIf="selectedChannel != null">
 			         <div class="userOnline" *ngFor="let member of selectedChannel.members">
-				         <i class="fas fa-plug"></i> {{ member }}
+				         {{ member }}
+						 <button type="button" class="deleteButton" (click)="deleteGroup(member)"><i class="fas fa-save"></i></button>
+						 <button type="button" class="deleteButton" (click)="deleteGroup(member)"><i class="fas fa-trash-alt"></i></button>
 			         </div>
+					 
                  </div>
              </div>
          </div>

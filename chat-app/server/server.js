@@ -10,7 +10,7 @@ const io = require('socket.io')(http);
 const dataFormat = 'utf8';
 // Mongo DataBase
 const MongoClient = require('mongodb').MongoClient;
-const dbURL = 'mongodb://localhost:27017/students';
+const dbURL = 'mongodb://localhost:27017/users';
 const verbose = false;
 // CORS
 // We are enabling CORS so that our 'ng serve' Angular server can still access

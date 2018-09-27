@@ -45,7 +45,8 @@ export class ChatComponent implements OnInit {
 		 fd.append('image', this.selectedfile, this.selectedfile.name);
 		 this.imgServ.imgupload(fd).subscribe(res =>{
 			 this.imagepath = res.data.filename;
-			 console.log(res.data.filename + ' , ' + res.data.size)
+			 console.log(res.data.filename + ' , ' + res.data.size);
+			 this.sockServ.sendImage(this.imagepath);		 
 		 }); 
 	 }
 	 //Send and get messages
@@ -57,15 +58,16 @@ export class ChatComponent implements OnInit {
 	 }
 	 
 	 public sendMessage(){
-		 if(this.message !== ''){
+		 if(this.message !== null){
 		     var d = new Date();
 		     var h = d.getHours();
 		     var m = d.getMinutes();
 			 console.log('Sending message');
 		     this.sockServ.sendMessages(this.user.username  + ' - ' + this.message + ' - ' + h + ':' + m);
 	     } else{
-			 var me = document.getElementById('mes');
-			 me.style.border = '2px solid #C70039';
+			 document.getElementById('mes').style.border = '2px solid #C70039';
+			 var em = 'Can not send message.';
+             document.getElementById('error').innerHTML = '' + em + '';
 		 }
 	 }	 
 	 //Destory connection

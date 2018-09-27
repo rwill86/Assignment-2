@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-// import { EventEmitter } from 'events';
 
 @Component({
      selector: 'app-channels',
@@ -11,13 +10,13 @@ export class ChannelsComponent implements OnInit {
      @Input() group;
      @Output() channelChanged: EventEmitter<string> = new EventEmitter();
 
-     constructor() { }
+     public constructor(){ 
+	 }
 
-     ngOnInit() {
+     public ngOnInit(){
      }
 
-     changeChannel(name){
-     //console.log("changeChannel("+name+")");
+     public changeChannel(name){
          this.channelChanged.emit(name);
      }
 }

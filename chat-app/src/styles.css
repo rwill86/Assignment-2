@@ -58,6 +58,10 @@ input[type="file"]{
 .black{
 	color: #000000;
 }
+/* error style */
+#error{
+	color: #C70039; 
+}
 /* .navContetn style */
 .navContent{
 	position: relative;

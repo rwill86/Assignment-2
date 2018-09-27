@@ -41,8 +41,8 @@ export class LoginComponent implements OnInit {
                  } else{
                      var message = 'Your username and password did not match.';
 					 document.getElementById('username').style.border = '2px solid #C70039';
-		             document.getElementById('email').style.border = '2px solid #C70039';
-                     document.getElementById('error').innerHTML = message;
+		             document.getElementById('password').style.border = '2px solid #C70039';
+                     document.getElementById('error').innerHTML = '' + message + '';
                  }
              },
              error => {

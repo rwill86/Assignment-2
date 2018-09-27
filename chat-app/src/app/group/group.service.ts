@@ -22,8 +22,8 @@ export class GroupService {
 
      public createGroup(data){
          var body = JSON.stringify(data);
-    return this.http.post(this.api + 'group/create', body, httpOptions);
-  }
+         return this.http.post(this.api + 'group/create', body, httpOptions);
+     }
 
      public deleteGroup(groupName, username){
          return this.http.delete(this.api + 'group/delete/' + groupName);
