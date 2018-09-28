@@ -3,13 +3,13 @@
      <div class="h2" *ngIf="channel != null">{{channel.name}}</div>
      <div class="subMessageContent">
          <div class="messageListContent">
-             <div class="black" *ngIf="!messages">No messages Yet.</div>
-		     <div class="userMessage" *ngFor="let message of messages">
+             <div class="black" *ngIf="messages == null">No messages Yet.</div>
+		     <div class="userMessage" *ngFor="let m of messages">
 			     <div class="userlogo">
-				     <img src="images\{{imagepath}}" alt="userLogo"/>
+				     <img src="images\{{user.userLogo}}" alt="userLogo"/>
 				 </div>
 			     <div class="userTextBox">
-				     {{message.text}}
+				     {{m.user}} {{m.text}} - {{m.date}}
 				 </div>
 			 </div>
 		 </div>
@@ -21,7 +21,6 @@
 		     <label for="uploadfile" class="chatButton" style="float:left;">
 				 <i class="far fa-image"></i><input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
 			 </label>
-		     <!--<button (click)="onUpload()" type="submit" name="submit" class="chatButton"><i class="far fa-image"></i></button>-->
 			 <button (click)="sendMessage()" type="submit" name="submit" class="chatButton">Send</button>
 		 </form>	 
      </div>

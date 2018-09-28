@@ -292,7 +292,7 @@ input[type="file"]{
     margin-right: 5px;
     width: 160px; 
     height: 120px;
-    border: 1px solid #000000; 
+    border: 1px solid #C70039; 
     border-radius: 5px;
 	overflow: hidden;
 }

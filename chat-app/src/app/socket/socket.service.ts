@@ -16,7 +16,11 @@ export class SocketService{
 
 	 public ngOnInit(){		 
 	 }
-	 public sendImage(data){
+	 
+	 public setUser(data){
+		 this.socket.emit('setUser' , data);
+	 }
+	 public addImage(data){
 		 this.socket.emit('addImage', data);
 	 }
 	 //Send Messages

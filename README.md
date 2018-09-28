@@ -12,8 +12,15 @@ Add NPM packages ```node npm i``` if needed.
 How to Run
 Enter ```ng build``` in command prompt to build the appilcation. This will create a ```/dist``` file.
 Run the NODE.JS server ```node server.js``` and the Angular client ```ng serve``` . Navigate to url add ```http://localhost:3000``` and ```http://localhost:4200``` 
+## Testing
+To test the NODE.JS firstly install ```npm install mocha``` then run the command ```npm test``` on server.
 ## Error Notes
 ## Author
 Ritchie Wils, s2967766
 
-##document
+#Documentation
+
+###Git
+###Data Structures
+###Rest API
+###Angular Architecture

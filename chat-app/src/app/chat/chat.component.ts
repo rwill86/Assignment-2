@@ -32,38 +32,39 @@ export class ChatComponent implements OnInit {
              this.user = user;
              console.log(this.user);
 		     this.getMes();
+			 this.setUser(this.user.username);
 		 }
      }
 	 //Upload image
 	 public onFileSelected(event){
 		 console.log(event);
 		 this.selectedfile = event.target.files[0];
-	 }
-	 
-	 public onUpload(){
 		 const fd = new FormData();
 		 fd.append('image', this.selectedfile, this.selectedfile.name);
-		 this.imgServ.imgupload(fd).subscribe(res =>{
-			 this.imagepath = res.data.filename;
-			 console.log(res.data.filename + ' , ' + res.data.size);
-			 this.sockServ.sendImage(this.imagepath);		 
-		 }); 
+		 //this.imgServ.imgupload(fd).subscribe(res =>{
+			 //this.imagepath = res.data.filename;
+			 //console.log(res.data.filename + ' , ' + res.data.size);
+			 //this.sockServ.sendImage(this.imagepath);		 
+		 //}); 
+		 this.sockServ.sendMessages(this.message);
+	 } 	 
+	 //setUser
+	 public setUser(data){
+		 this.sockServ.setUser(data);
 	 }
 	 //Send and get messages
 	 public getMes(){
 		 this.connection = this.sockServ.getMessages().subscribe((message:string) => {
 			 this.messages.push(message);
-			 this.message = '';
+			 this.message = null;
 		 });
 	 }
 	 
 	 public sendMessage(){
-		 if(this.message !== null){
-		     var d = new Date();
-		     var h = d.getHours();
-		     var m = d.getMinutes();
+		 console.log('messsage: ' + this.message);
+		 if(this.message != null){
 			 console.log('Sending message');
-		     this.sockServ.sendMessages(this.user.username  + ' - ' + this.message + ' - ' + h + ':' + m);
+		     this.sockServ.sendMessages(this.message);
 	     } else{
 			 document.getElementById('mes').style.border = '2px solid #C70039';
 			 var em = 'Can not send message.';

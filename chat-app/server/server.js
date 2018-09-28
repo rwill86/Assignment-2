@@ -120,7 +120,6 @@ app.delete('/api/user/:id', function (req, res){
      var deleter = require('./remove.js')(MongoClient, dbURL);
      deleter.removeUser(req.params.id, res);
 });
-
 // Login
 app.post('/api/login', function(req, res){
      fs.readFile(dataFile, dataFormat, function(err, data){

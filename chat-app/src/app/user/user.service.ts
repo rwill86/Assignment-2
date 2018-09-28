@@ -30,12 +30,12 @@ export class UserService {
          return this.http.post(this.api + 'user/create', body, httpOptions);
      }
 	 
-	 //public update(data){
-         //var body = JSON.stringify(data);
-        // return this.http.put(this.api +'user/' + data.id, body, httpOptions);
-     //}
+	 public update(data){
+         var body = JSON.stringify(data);
+         return this.http.put(this.api +'user/' + data.id, body, httpOptions);
+     }
 
-     //public deleteUser(data){
-         //return this.http.delete(this.api + 'user/delete/' + data._id;
-     //}
+     public deleteUser(data){
+         return this.http.delete(this.api + 'user/delete/' + data._id);
+     }
 }
