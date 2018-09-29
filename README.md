@@ -18,9 +18,8 @@ To test the NODE.JS firstly install ```npm install mocha``` then run the command
 ## Author
 Ritchie Wils, s2967766
 
-#Documentation
-
-###Git
-###Data Structures
-###Rest API
-###Angular Architecture
+##Documentation
+##Git
+##Data Structures
+##Rest API
+##Angular Architecture

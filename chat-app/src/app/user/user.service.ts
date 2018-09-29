@@ -19,23 +19,27 @@ export class UserService {
 
      public constructor(private http:HttpClient){		 
 	 }
+	 
+	 public getUsers(){
+         return this.http.get(this.api + 'users');
+     }
 
      public login(data){
          var body = JSON.stringify(data);
          return this.http.post(this.api + 'login', body, httpOptions);
      }
 
-     public create(data){
-         var body = JSON.stringify(data);
-         return this.http.post(this.api + 'user/create', body, httpOptions);
+     public create(user){
+         var body = JSON.stringify(user);
+         return this.http.post(this.api + 'user', body, httpOptions);
      }
 	 
-	 public update(data){
-         var body = JSON.stringify(data);
-         return this.http.put(this.api +'user/' + data.id, body, httpOptions);
+	 public update(user){
+         var body = JSON.stringify(user);
+         return this.http.put(this.api +'user/' + user._id, body, httpOptions);
      }
 
-     public deleteUser(data){
-         return this.http.delete(this.api + 'user/delete/' + data._id);
+     public deleteUser(user){
+         return this.http.delete(this.api + 'user/' + user._id);
      }
 }

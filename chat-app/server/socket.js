@@ -12,14 +12,8 @@ module.exports = function(app, io){
 		 io.sockets.emit('boardcast', {description: clients + ' clients connected!'});
 		 //setUser
 		 socket.on('setUser', function(data){		 
-			 //if(users.indexOf(data) > -1){
-				 //users.push(data);
 		     console.log('Set user: ' + data);
-				 //scoket.emit('userSet', {username: data});
-		     socket.username = data;
-			 //} else{
-				 //socket.emit('userExists', data);
-			 //}		 
+		     socket.username = data; 
 		 });
 		 //getUser
 		 socket.on('getUser', function(data){
@@ -68,7 +62,7 @@ module.exports = function(app, io){
 		     var h = d.getHours();
 		     var m = d.getMinutes();
 			 var date = h + ':' + m;
-		     io.emit('message', {type:'message', text:message, user:socket.username, date:date});
+		     io.emit('message', {type:'message', text:message, user:socket.username, image:'', date:date});
 		 });
 	 });
 };

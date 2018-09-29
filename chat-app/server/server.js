@@ -20,6 +20,9 @@ var corsOptions = {
   origin: 'http://localhost:4200',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 };
+// Login Module
+const login = require('./login.js')();
+const groups = require('./groups.js')();
 
 app.use(cors(corsOptions))
 // Body-Parser
@@ -47,9 +50,6 @@ app.get('/login', function(req,res){
 app.get('/user', function(req,res){
     res.sendFile(path.join(__dirname,'../dist/chat-app/index.html'))
 });
-// Login Module
-const login = require('./login.js')();
-const groups = require('./groups.js')();
 //Mongo Databease 
 app.get('/db/install', function(req, res){
 	 console.log('Setting up initial db state');
@@ -59,32 +59,75 @@ app.get('/db/install', function(req, res){
 		 }
          console.log('SUCCESS: connected to db');
          var dbo = db.db('users');
+		 var dboc = db.db('channels');
+		 var dbog = db.db('groups');
 
          // Drop collection
          dbo.collection('users').drop(function(err, delOk){
              if(err){
                  console.log('ERROR: failed drop collection users');
-                 if(verbose) console.log(err)
+                 if(verbose){
+					 console.log(err)
+				 } 
              };
              if(delOk){
 				 console.log('SUCCESS: dropped collection users');
 			 }
          });
 		 
-		 var data = [
-             { username: 'James', password: 'pass'},
-             { username: 'John', password: 'pass'},
-             { username: 'Jane', password: 'pass'},
-             { username: 'Mary', password: 'pass'}
+		 dboc.collection('channels').drop(function(err, delOk){
+             if(err){
+                 console.log('ERROR: failed drop collection channels');
+                 if(verbose){
+					 console.log(err);
+				 } 
+             };
+             if(delOk){
+				 console.log('SUCCESS: dropped collection channels');
+			 }
+         });
+		 
+		 dbog.collection('groups').drop(function(err, delOk){
+             if(err){
+                 console.log('ERROR: failed drop collection groups');
+                 if(verbose){
+					 console.log(err);
+				 } 
+             };
+             if(delOk){
+				 console.log('SUCCESS: dropped collection groups');
+			 }
+         });
+		 
+		 var udata = [
+             { username: 'Ritchie', password: 'pass', userLogo:'logo1.PNG', permissions:2 },
+             { username: 'super', password: 'super', userLogo:'logo1.PNG', permissions:2 },
+             { username: 'group', password: 'group', userLogo:'logo2.PNG', permissions:1 },
+             { username: 'Jim', password: '2', userLogo:'logo2.PNG', permissions:0 },
+			 { username: 'Mary', password: '1', userLogo:'logo2.PNG', permissions:0 }
          ];
-         dbo.collection('users').insertMany(data, function(err, res){
+		 
+		 var cdata = [
+             { name: 'Events', group: 'Griffith Innovate', members: ['Ritchie','Mary','group'] },
+             { name: 'Admin Chat', group: 'Griffith Innovate', members: ['Ritchie'] },
+             { name: 'Lab Help', group: '2811ICT', members: ['Ritchie','Mary','Jim'] },
+             { name: 'Assignment Help', group: '2811ICT', members:['Mary','Jim'] }
+         ];
+		 
+		 var gdata = [
+             { name: 'Griffith Innovate', admins: ['Ritchie'], members: ['Ritchie','Mary','group'] },
+             { name: '2811ICT', admins: ['super'], members: ['Ritchie','Jim'] },
+             { name: '1701ICT', admins: ['group'], members: ['Mary'] }
+         ];
+		 
+         dbo.collection('users').insertMany(udata, function(err, res){
              if(err){
 				 throw err;
 			 }
              console.log('Inserted ' + res.insertedCount + ' documents to users');
          });
 		 
-		 dbo.collection('users').find({}).toArray(function(err, result) {
+		 dbo.collection('users').find({}).toArray(function(err, result){
              if(err){
 				 throw err;
 			 }
@@ -104,7 +147,9 @@ app.post('/api/user', function (req, res) {
      var writer = require('./add.js')(MongoClient, dbURL);
      var newUser = {
          'username': req.body.username,
-         'password': req.body.password
+         'password': req.body.password,
+		 'userLogo': 'logo1.PNG',
+		 'permissions': 0
      }
      writer.addUser(newUser, res);
 });
@@ -123,18 +168,26 @@ app.delete('/api/user/:id', function (req, res){
 // Login
 app.post('/api/login', function(req, res){
      fs.readFile(dataFile, dataFormat, function(err, data){
+		 //var loginn = require('./login.js')(MongoClient, dbURL);
+		 var username = req.body.username;
+         var password = req.body.password;	
+		 console.log('u: ' + username  + ' p: ' + password);
+		 //loginn.getLogin(username, password, res);
+		 
          data = JSON.parse(data);
-         var username = req.body.username;
-         var password = req.body.password;		 
+         //var username = req.body.username;
+         //var password = req.body.password;			 
          login.data = data;
          var match = login.findUser(username, password); 
+		 //loginn.getLogin(username, password, res);
          // Check to see if we have a match, get groups if true
          if(match !== false){
              groups.data = data;
              match.groups = groups.getGroups(username, match.permissions);
          }
-         //console.log(match.groups[0].channels[0])
+         console.log(match.groups[0].channels[0])
          res.send(match);
+		 //res.send(true);
      });
 });
 // Group APIs

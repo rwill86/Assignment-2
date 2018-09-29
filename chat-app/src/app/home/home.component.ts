@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
              // User has not logged in, reroute to login
              this.router.navigate(['/login']);
          } else{
-             let user = JSON.parse(sessionStorage.getItem('user'));
+             var user = JSON.parse(sessionStorage.getItem('user'));
              this.user = user;
              console.log(this.user);
              this.groups = user.groups;
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
 
      public createGroup(event){
          event.preventDefault();
-         let data = {'newGroupName': this.newGroupName};
+         var data = {'newGroupName': this.newGroupName};
          this._groupService.createGroup(data).subscribe(
              data => { 
                  console.log(data);

@@ -3,7 +3,7 @@ module.exports = function(MongoClient, dbURL){
      this.dbURL = dbURL;
 
      this.updateUser = function(user, res){
-        this.MongoClient.connect(this.dbURL, function(err, db){
+         this.MongoClient.connect(this.dbURL, function(err, db){
              if(err){
 				 throw err;
 			 }

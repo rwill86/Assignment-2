@@ -13,11 +13,11 @@ export class LoginComponent implements OnInit {
      public username:string;
      private password:string;
 
-     constructor(private router:Router, private form:FormsModule, private _userService:UserService) {
+     constructor(private router:Router, private form:FormsModule, private _userService:UserService){
      }
  
      ngOnInit(){
-         if(sessionStorage.getItem('user') !== null || localStorage.getItem('user') !== null){
+         if(sessionStorage.getItem('user') !== null){ //|| localStorage.getItem('user') !== null
              this.router.navigate(['/home']);
          }
      }

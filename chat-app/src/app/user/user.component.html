@@ -9,15 +9,40 @@
 	     <!-- Groups Section -->
 	         <div class="h1">Account</div> 
 			 <div class="h2">Username: {{user.username}}</div> 		
+			 <div class="formLabel">Permissions: {{user.permissions}}</div> 	
              <div class="userBiglogo">
 				 <img src="images\{{user.userLogo}}" alt="userLogo"/>
 		     </div>			 
-		      <form>
-		         <div class="formLabel">Upload Logo</div>			     
+		      <form>		     
 				 <label for="uploadfile" class="chatButton" style="float:left;">
 				     <i class="far fa-image"></i><input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
 				 </label>
 		         <button (click)="onUpload()" type="submit" name="submit" class="chatButton">Upload</button>
 		     </form>
 		 </div>
-     </div>		 
+     </div>		 	 
+	 <div class="groupWrap">
+         <div class="mainGroupContent">
+		     <div class="h1">User List</div> 
+			 <div class="userList" *ngFor="let u of userss;">	
+                 <div class="h2">UserID: {{u._id}}</div>			 
+			     <div class="formLabel">Username</div>
+			     <input type="text" class="formInput" name="username" [(ngModel)]="u.username" placeholder="{{u.username}}"/>
+				 <div class="formLabel">Password</div>
+				 <input type="password" class="formInput" name="password" [(ngModel)]="u.password" placeholder="{{u.password}}"/>
+			     <button (click)="updateUser(u)" type="submit" name="submit" class="chatButton"><i class="fas fa-save"></i> Save</button>
+                 <button (click)="deleteUser(u)" type="submit" name="submit" class="chatButton"><i class="fas fa-trash-alt"></i> Delete</button>
+			 </div>
+		 </div>
+	 </div>
+	 <div class="groupWrap">
+         <div class="mainGroupContent">
+		     <div class="h1">Create User</div> 
+			 <div class="h2">Make a new user</div> 	
+				 <div class="formLabel">Username</div>
+			     <input type="text" class="formInput" name="username" id="username" [(ngModel)]="username" placeholder="Username"/>
+			     <div class="formLabel">Password</div>
+	             <input type="password" class="formInput" name="password" id="password" [(ngModel)]="password" placeholder="Password"/>
+	             <button (click)="createUser(username, password)" type="submit" name="submit" class="chatButton">Create</button>
+		 </div>
+	 </div>

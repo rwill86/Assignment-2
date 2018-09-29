@@ -33,13 +33,17 @@ input[type="file"]{
 .subwrap{
 	position: relative;
 	margin: 0 auto;
+	overflow: hidden;
 }
 /* .otherwraps style */
 .chatWrap, .channelWrap, .groupWrap, .userWrap{
 	width: 25%;
 	position: relative;
 	float: left;
-	padding-right: 10px;
+	margin: 0 auto;	
+	padding: 0px;
+	padding-left: 5px;
+	overflow: hidden;
 }
 /* .h1 style */
 .h1{
@@ -263,7 +267,18 @@ input[type="file"]{
 	color: #000000;
 	padding: 5px;
     border-radius: 5px;
-	background: #C70039;
+	background: #080808;
+	border: 1px solid #C70039;
+}
+/* .userList style */
+.userList{
+	position: relative;	
+	display: block;
+	overflow: hidden;
+	margin: 10px 0px;	
+	padding: 10px;
+    border-radius: 5px;
+	background: #080808;
 	border: 1px solid #C70039;
 }
 /* .useronline style */
@@ -289,7 +304,7 @@ input[type="file"]{
 /* .userBigLogo style */
 .userBiglogo{
 	position: relative;
-    margin-right: 5px;
+	margin: 10px 0px;
     width: 160px; 
     height: 120px;
     border: 1px solid #C70039; 
