@@ -12,20 +12,24 @@
 			 <div class="formLabel">Permissions: {{user.permissions}}</div> 	
              <div class="userBiglogo">
 				 <img src="images\{{user.userLogo}}" alt="userLogo"/>
-		     </div>			 
-		      <form>		     
-				 <label for="uploadfile" class="chatButton" style="float:left;">
+		     </div>	
+             <div id="errorImage"></div>			 
+		     <form>		     
+				 <label for="uploadfile" class="chatButton" id="img" style="float:left;">
 				     <i class="far fa-image"></i><input type="file" (change)="onFileSelected($event)" name="uploadfile" id="uploadfile"/>
 				 </label>
 		         <button (click)="onUpload()" type="submit" name="submit" class="chatButton">Upload</button>
 		     </form>
 		 </div>
      </div>		 	 
-	 <div class="groupWrap">
+	 <div class="groupWrap" if="user.permissions == 2;">
          <div class="mainGroupContent">
 		     <div class="h1">User List</div> 
 			 <div class="userList" *ngFor="let u of userss;">	
-                 <div class="h2">UserID: {{u._id}}</div>			 
+                 <div class="h2">UserID: {{u._id}}</div>
+                 <div class="userBiglogo">
+				     <img src="images\{{u.userLogo}}" alt="userLogo"/>
+		         </div>					 
 			     <div class="formLabel">Username</div>
 			     <input type="text" class="formInput" name="username" [(ngModel)]="u.username" placeholder="{{u.username}}"/>
 				 <div class="formLabel">Password</div>
@@ -39,10 +43,11 @@
          <div class="mainGroupContent">
 		     <div class="h1">Create User</div> 
 			 <div class="h2">Make a new user</div> 	
+			 <div id="error"></div>
 				 <div class="formLabel">Username</div>
-			     <input type="text" class="formInput" name="username" id="username" [(ngModel)]="username" placeholder="Username"/>
+			     <input type="text" class="formInput" name="username" id="use" [(ngModel)]="username" placeholder="Username"/>
 			     <div class="formLabel">Password</div>
-	             <input type="password" class="formInput" name="password" id="password" [(ngModel)]="password" placeholder="Password"/>
+	             <input type="password" class="formInput" name="password" id="pas" [(ngModel)]="password" placeholder="Password"/>
 	             <button (click)="createUser(username, password)" type="submit" name="submit" class="chatButton">Create</button>
 		 </div>
 	 </div>

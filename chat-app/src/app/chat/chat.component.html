@@ -8,14 +8,20 @@
 			     <div class="userlogo">
 				     <img src="images\{{user.userLogo}}" alt="userLogo"/>
 				 </div>
-			     <div class="userTextBox">
+				 <div class="userTextBox" *ngIf="m.image != null">
+				     {{m.user}} - {{m.date}}
+				     <div class="messageImage">
+				         <img src="images\{{m.image}}" alt="userLogo"/>
+		             </div>	
+				 </div>
+			     <div class="userTextBox" *ngIf="m.image == null">
 				     {{m.user}} {{m.text}} - {{m.date}}
 				 </div>
 			 </div>
 		 </div>
 	 </div>    
      <div class="chatMessageContent">
-	     <div id="error"></div>
+	     <div id="error3"></div>
 	     <input [(ngModel)]="message" class="messageInput" name="message" id="mes" placeholder="What's on your mind."/> 
 		 <form>
 		     <label for="uploadfile" class="chatButton" style="float:left;">

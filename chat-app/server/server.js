@@ -20,8 +20,7 @@ var corsOptions = {
   origin: 'http://localhost:4200',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 };
-// Login Module
-const login = require('./login.js')();
+// Group Module
 const groups = require('./groups.js')();
 
 app.use(cors(corsOptions))
@@ -127,6 +126,20 @@ app.get('/db/install', function(req, res){
              console.log('Inserted ' + res.insertedCount + ' documents to users');
          });
 		 
+		 dbog.collection('groups').insertMany(gdata, function(err, res){
+             if(err){
+				 throw err;
+			 }
+             console.log('Inserted ' + res.insertedCount + ' documents to groups');
+         });
+		 
+		 dboc.collection('channels').insertMany(cdata, function(err, res){
+             if(err){
+				 throw err;
+			 }
+             console.log('Inserted ' + res.insertedCount + ' documents to channels');
+         });
+		 
 		 dbo.collection('users').find({}).toArray(function(err, result){
              if(err){
 				 throw err;
@@ -137,7 +150,7 @@ app.get('/db/install', function(req, res){
          db.close();
 	 });
 });
-
+// User API
 app.get('/api/users', function (req, res){
      var reader = require('./read.js')(MongoClient, dbURL);
      reader.getUsers(res);
@@ -167,44 +180,48 @@ app.delete('/api/user/:id', function (req, res){
 });
 // Login
 app.post('/api/login', function(req, res){
-     fs.readFile(dataFile, dataFormat, function(err, data){
-		 //var loginn = require('./login.js')(MongoClient, dbURL);
-		 var username = req.body.username;
-         var password = req.body.password;	
-		 console.log('u: ' + username  + ' p: ' + password);
-		 //loginn.getLogin(username, password, res);
-		 
-         data = JSON.parse(data);
-         //var username = req.body.username;
-         //var password = req.body.password;			 
-         login.data = data;
-         var match = login.findUser(username, password); 
-		 //loginn.getLogin(username, password, res);
-         // Check to see if we have a match, get groups if true
-         if(match !== false){
-             groups.data = data;
-             match.groups = groups.getGroups(username, match.permissions);
-         }
-         console.log(match.groups[0].channels[0])
-         res.send(match);
-		 //res.send(true);
-     });
+	 var login = require('./login.js')(MongoClient, dbURL);
+	 var username = req.body.username;
+     var password = req.body.password;	
+	 console.log('u: ' + username  + ' p: ' + password);
+     var match = login.getLogin(username, password, res);
+     //fs.readFile(dataFile, dataFormat, function(err, data){
+		 //data = JSON.parse(data);
+	     //if(match !== null){
+		     //groups.data = data;
+	         //match.groups = groups.getGroups(username, 2);
+	     //}	
+     //});	 
 });
 // Group APIs
 app.post('/api/groups', function(req, res){
-    // We want to authenticate again -- usually you'd use a token
-     fs.readFile(dataFile, dataFormat, function(err, data){
-         data = JSON.parse(data);
-         var username = req.body.username; 
-         login.data = data;
-         var match = login.findUser(username);    
+     // We want to authenticate again -- usually you'd use a token
+     //fs.readFile(dataFile, dataFormat, function(err, data){
+         //data = JSON.parse(data);
+         //var username = req.body.username; 
+         //login.data = data;
+         //let match = login.findUser(username);    
          // Check to see if we got a match, get groups if true
-         if(match !== false){
-             groups.data = data;
-             match.groups = groups.getGroups(username, match.permissions);
-         }
-         res.send(match);
-     });
+         //if(match !== false){
+             //groups.data = data;
+             //match.groups = groups.getGroups(username, match.permissions);
+         //}
+         //res.send(match);
+     //});
+	 fs.readFile(dataFile, dataFormat, function(err, data){
+		 data = JSON.parse(data);
+	     var loginn = require('./login.js')(MongoClient, dbURL);
+	     var username = req.body.username;
+         var password = req.body.password;	
+	     console.log('u: ' + username  + ' p: ' + password);
+         let match = loginn.getLogin(username, password, res);
+	     console.log('Object' + match);
+	     if(match !== null){
+		     console.log('testing');
+		     groups.data = match;
+	         match.groups = groups.getGroups(username, match.permissions);
+	     }	
+     });	 
 });
 
 app.delete('/api/group/delete/:groupname', function(req, res){

@@ -21,8 +21,8 @@ export class SocketService{
 		 this.socket.emit('setUser' , data);
 	 }
 	 //add image 
-	 public addImage(data){
-		 this.socket.emit('addImage', data);
+	 public addImage(data, id){
+		 this.socket.emit('addImage', data, id);
 	 }
 	 //Join and leave room
 	 public joinRoom(data){
@@ -32,10 +32,9 @@ export class SocketService{
 	 public leaveRoom(data){
 		 this.socket.emit('leaveRoom', data);
 	 }
-	 addRoom
 	 //Send And get Messages
-	 public sendMessages(message){
-		 this.socket.emit('addMessage', message);
+	 public sendMessages(message, id){
+		 this.socket.emit('addMessage', message, id);
 	 }
 
 	 public getMessages = () => {

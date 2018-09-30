@@ -13,7 +13,8 @@ export class HomeComponent implements OnInit {
      public selectedChannel;
      public groups = [];
      public channels = [];
-     public newGroupName:String
+     public newGroupName:String;
+	 public newChannelName:String;
 
      public constructor(private router: Router, private _groupService:GroupService){
 	 }
@@ -39,15 +40,41 @@ export class HomeComponent implements OnInit {
      public createGroup(event){
          event.preventDefault();
          var data = {'newGroupName': this.newGroupName};
-         this._groupService.createGroup(data).subscribe(
-             data => { 
-                 console.log(data);
-                 this.getGroups();
-             },
-             error => {
-                 console.error(error);
-             }
-         )
+		 if(this.newGroupName != null){
+             this._groupService.createGroup(data).subscribe(
+                 data => { 
+                     console.log(data);
+                     this.getGroups();
+                 },
+                 error => {
+                     console.error(error);
+                 }
+             )
+		 } else{
+			 document.getElementById('gro').style.border = '2px solid #C70039';		 
+			 var em = 'input is empty.';
+             document.getElementById('error').innerHTML = '' + em + '';
+		 }
+     }
+	 
+	 public createChannel(event){
+         event.preventDefault();
+         var data = {'newChannelName': this.newGroupName};
+		 if(this.newGroupName != null){
+             this._groupService.createGroup(data).subscribe(
+                 data => { 
+                     console.log(data);
+                     this.getGroups();
+                 },
+                 error => {
+                     console.error(error);
+                 }
+             )
+		 } else{
+			 document.getElementById('cha').style.border = '2px solid #C70039';		 
+			 var em = 'input is empty.';
+             document.getElementById('error2').innerHTML = '' + em + '';
+		 }
      }
 
      public deleteGroup(groupName){

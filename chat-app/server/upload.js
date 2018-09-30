@@ -4,7 +4,9 @@ module.exports = function(app, formidable){
 		 form.keepExtenions = true;
 		 
 		 form.on('error', function(err){
-			 throw err;
+			 if(err){
+			     throw err;
+			 }
 			 res.send({
 				 result:'failed',
 				 data:{},

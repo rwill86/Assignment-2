@@ -16,7 +16,8 @@ export class UserComponent implements OnInit{
 	 public username;
 	 public password;
 	 public selectedfile = null;
-	 public imagepath = '';
+	 public imagepath;
+	 public imagesize;
 	 
      public constructor(private router:Router, private form:FormsModule, private imgServ:ImageService, private userServ:UserService){
 	 }
@@ -50,11 +51,30 @@ export class UserComponent implements OnInit{
 	 
 	 public onUpload(){
 		 const fd = new FormData();
-		 fd.append('image', this.selectedfile, this.selectedfile.name);
-		 this.imgServ.imgupload(fd).subscribe(res =>{
-			 this.imagepath = res.data.filename;
-			 console.log(res.data.filename + ' , ' + res.data.size)
-		 }); 
+		 if(this.selectedfile != null){
+		     fd.append('image', this.selectedfile, this.selectedfile.name);
+		     this.imgServ.imgupload(fd).subscribe(res =>{
+			     this.imagepath = res.data.filename;
+			     console.log(res.data.filename + ' , ' + res.data.size);
+				 var u = {
+			         _id: this.user._id,
+                     username: this.user.username,
+                     password: this.user.password,
+			         userLogo: this.imagepath,
+			         permissions: this.user.permissions
+                 }
+		         this.updateUser(u);
+			     var temp = JSON.stringify(u);
+                 sessionStorage.setItem('user', temp); 
+                 localStorage.setItem('user', temp);
+				 document.getElementById('errorImage').innerHTML = '';
+				 return true;
+		     }); 	
+		 } else{
+			 document.getElementById('img').style.border = '2px solid #C70039';		 
+			 var em = 'File is empty.';
+             document.getElementById('errorImage').innerHTML = '' + em + '';
+		 }
 	 }
 	 //get User
 	 public getUsers(){
@@ -75,15 +95,25 @@ export class UserComponent implements OnInit{
 			 userLogo: '',
 			 permissions: 0,
          }
-		 this.userServ.create(user).subscribe(
-             data => { 
-                 this.getUsers();
-                 return true;
-             },
-             error => {
-                 console.error(error);
-             }
-         )
+		 if(username != null && password != null){
+		     this.userServ.create(user).subscribe(
+                 data => { 
+			         this.username = '';
+				     this.password = '';
+                     this.getUsers();
+					 document.getElementById('error').innerHTML = '';
+                     return true;
+                 },
+                 error => {
+                     console.error(error);
+                 }
+             )
+		 } else{
+			 document.getElementById('use').style.border = '2px solid #C70039';
+			 document.getElementById('pas').style.border = '2px solid #C70039';
+			 var em = 'Inputs are empty.';
+             document.getElementById('error').innerHTML = '' + em + '';
+		 }
 	 }
 	 
 	 public updateUser(user){

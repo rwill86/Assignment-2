@@ -24,30 +24,36 @@ export class LoginComponent implements OnInit {
 
      loginUser(event){
          event.preventDefault();
-         console.log(this.username);
+         console.log('username: ' + this.username);
          var user = {
              username: this.username,
              password: this.password
          }
-    
-         this._userService.login(user).subscribe(
-             data => { 
-                 console.log(data);
-                 if(data != false){
-                     var temp = JSON.stringify(data);
-                     sessionStorage.setItem('user', temp); 
-                     localStorage.setItem('user', temp);					 
-                     this.router.navigate(['/home']); 
-                 } else{
-                     var message = 'Your username and password did not match.';
-					 document.getElementById('username').style.border = '2px solid #C70039';
-		             document.getElementById('password').style.border = '2px solid #C70039';
-                     document.getElementById('error').innerHTML = '' + message + '';
+         if(this.username == null || this.password == null){
+             this._userService.login(user).subscribe(
+                 data => { 
+                     console.log(data);
+                     if(data != null){
+                         var temp = JSON.stringify(data);
+                         sessionStorage.setItem('user', temp); 
+                         localStorage.setItem('user', temp);					 
+                         this.router.navigate(['/home']); 
+                     } else{
+                         var message = 'Your username and password did not match.';
+					     document.getElementById('username').style.border = '2px solid #C70039';
+		                 document.getElementById('password').style.border = '2px solid #C70039';
+                         document.getElementById('error').innerHTML = '' + message + '';
+                     }
+                 },
+                 error => {
+                     console.error(error);
                  }
-             },
-             error => {
-                 console.error(error);
-             }
-		 );
+		     );
+	     } else{
+		     var message = 'Input is empty.';
+		     document.getElementById('username').style.border = '2px solid #C70039';
+		     document.getElementById('password').style.border = '2px solid #C70039';
+             document.getElementById('error').innerHTML = '' + message + '';
+	     }
      }
 }

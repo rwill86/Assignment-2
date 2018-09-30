@@ -13,7 +13,8 @@ module.exports = function(MongoClient, dbURL){
              var newValues = {
                  $set: {
                      username: user.username,
-                     password: user.password
+                     password: user.password,
+					 userLogo: user.userLogo
                  }
              }
 

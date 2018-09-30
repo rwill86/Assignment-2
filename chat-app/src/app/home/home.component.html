@@ -14,7 +14,8 @@
              <!-- New Group Form -->
              <form (submit)="createGroup($event)">
 			     <div class="formLabel">Create Group</div>
-                 <input [(ngModel)]="newGroupName" type="text" class="formInput" name="newGroupName"  placeholder="New Group">
+				 <div id="error"></div>
+                 <input [(ngModel)]="newGroupName" type="text" class="formInput" id="gro" name="newGroupName"  placeholder="New Group">
 			     <button type="submit" name="submit" class="chatButton">Create</button>
              </form>			 
 			  <!-- List of Groups -->
@@ -33,7 +34,8 @@
 		     <!-- New Channel Form -->
 			 <form (submit)="createChannel($event)">
 			     <div class="formLabel">Create Channel</div>
-                 <input class="formInput" name="newGroupName" placeholder="New Channel" type="text" [(ngModel)]="newGroupName">
+				 <div id="error2"></div>
+                 <input class="formInput" name="newChannelName" placeholder="New Channel" id="cha" type="text" [(ngModel)]="newChannelName">
                  <button class="chatButton">Create</button>
              </form>
 			 <!-- List of Channels -->
@@ -53,9 +55,8 @@
 			         <div class="userOnline" *ngFor="let member of selectedChannel.members">
 				         {{ member }}
 						 <!--<button type="button" class="deleteButton"><i class="fas fa-save"></i></button>-->
-						 <button type="button" class="deleteButton"><i class="fas fa-trash-alt"></i></button>
-			         </div>
-					 
+						 <!--<button type="button" class="deleteButton"><i class="fas fa-trash-alt"></i></button>-->
+			         </div>				 
                  </div>
              </div>
          </div>

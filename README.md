@@ -20,6 +20,7 @@ Ritchie Wils, s2967766
 
 ##Documentation
 ##Git
+
 ##Data Structures
 ##Rest API
 ##Angular Architecture
