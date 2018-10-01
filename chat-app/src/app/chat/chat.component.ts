@@ -26,12 +26,21 @@ export class ChatComponent implements OnInit {
 
      public ngOnInit(){
 		 if(sessionStorage.getItem('user') === null){
-             // User has not logged in, reroute to login
-             this.router.navigate(['/login']);
-         } else{
+		     if(localStorage.getItem('user') !== null){
+			     //local storage
+			     var user = JSON.parse(localStorage.getItem('user'));
+				 sessionStorage.setItem('user', user);
+                 this.user = user;
+				 this.setUser(this.user.username);
+		     } else{
+                 // User has not logged in, re-route to login
+			     console.log('Not validated.');
+			     sessionStorage.clear();
+                 this.router.navigate(['/login']);
+			 }
+         } else{			 
 		     var user = JSON.parse(sessionStorage.getItem('user'));
              this.user = user;
-             console.log(this.user);
 			 this.setUser(this.user.username);
 		 }
 		 this.getMes();
@@ -56,7 +65,6 @@ export class ChatComponent implements OnInit {
 				 this.sockServ.addImage(this.imagepath, 'Lobby');
 			     this.getMes();
 			 }
-			 return true;
 		 }); 
 	 } 	 
 	 //setUser
@@ -67,30 +75,33 @@ export class ChatComponent implements OnInit {
 	 public getMes(){
 		 this.connection = this.sockServ.getMessages().subscribe((message:string) => {
 			 this.messages.push(message);
-			 this.message = null;
+			 this.message = '';
+			 return true;
 		 });
 	 }	
  	 
 	 public sendMessage(){
 		 console.log('messsage: ' + this.message);
+		 //Check if message is null
 		 if(this.message != null){
 			 var id = '';
 			 if(this.channel != null){
 				 console.log('Sending message.');
 				 id = this.channel.name;
 		         this.sockServ.sendMessages(this.message, id);
-				 this.getMes();
 			 } else{
 			     console.log('Sending message.');
 				 id = 'Lobby';
-		         this.sockServ.sendMessages(this.message, id);
-				 this.getMes();
+		         this.sockServ.sendMessages(this.message, id);			 
 			 }
+			 this.getMes();
+			 return true;
 	     } else{
 			 document.getElementById('mes').style.border = '2px solid #C70039';
 			 var em = 'Can not send message.';
              document.getElementById('error3').innerHTML = '' + em + '';
 		 }
+		 
 	 }		 
 	 //Join and exit rooms	 
 	 public joinRoom(){
@@ -114,13 +125,11 @@ export class ChatComponent implements OnInit {
 		     this.sockServ.leaveRoom(data);
 		 }
 	 }
-
 	 //Destory connection
 	 public ngOnDestory(){
 		 if(this.connection){
 			 this.connection.unsubscribe();
-			 var data = 'Lobby user disconnected.';
-		     console.log(data);
+			 var data = 'Lobby';
 		     this.sockServ.leaveRoom(data);
 		 }
 	 }

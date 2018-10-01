@@ -1,6 +1,8 @@
  <div class="mainMessageContent">
      <div class="h1">Chat</div>
+	 <div class="footerline"></div>		
      <div class="h2" *ngIf="channel != null">{{channel.name}}</div>
+	 <div class="h2" *ngIf="channel == null">Lobby</div>
      <div class="subMessageContent">
          <div class="messageListContent">
              <div class="black" *ngIf="messages == null">No messages Yet.</div>

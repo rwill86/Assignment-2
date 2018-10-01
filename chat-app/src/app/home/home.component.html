@@ -10,37 +10,47 @@
      <div class="groupWrap">
          <div class="mainGroupContent">
 	     <!-- Groups Section -->
-	         <div class="h1">Groups</div>             
+	         <div class="h1">Groups</div>  
+             <div class="footerline"></div>				 
              <!-- New Group Form -->
+			 <div class="checkPer" *ngIf="user.permissions >= 1">
              <form (submit)="createGroup($event)">
-			     <div class="formLabel">Create Group</div>
+			     <div class="formLabel">Create Group</div>				 
 				 <div id="error"></div>
                  <input [(ngModel)]="newGroupName" type="text" class="formInput" id="gro" name="newGroupName"  placeholder="New Group">
 			     <button type="submit" name="submit" class="chatButton">Create</button>
-             </form>			 
+             </form>	
+             </div>			 
 			  <!-- List of Groups -->
+			 <div class="formLabel"></div>
 			 <div class="h2">List</div>
+			 <div class="formLabel" *ngIf="selectedGroup != null">{{selectedGroup.name}}</div>
              <div class="groupListContent" *ngFor="let group of groups">
-                 <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
-                 <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
-                 <button type="button" class="deleteButton" (click)="deleteGroup(group.name)" *ngIf="group.role >= 1"><i class="fas fa-trash-alt"></i></button>
+                 <button type="button" *ngIf="user.permissions == 0" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
+                 <button type="button" *ngIf="user.permissions >= 1" (click)="openGroup(group.name)" class="midButton"><i class="fas fa-users"></i> {{ group.name }}</button>
+                 <button type="button" class="deleteButton" (click)="deleteGroup(group.name)" *ngIf="user.permissions >= 1"><i class="fas fa-trash-alt"></i></button>
              </div>
 	     </div>
      </div>
 	 <!-- Channels Column -->
      <div class="channelWrap">
 	     <div class="mainChannelContent">	 
-		     <div class="h1">Channels</div>    
+		     <div class="h1">Channels</div> 
+             <div class="footerline"></div>			 
 		     <!-- New Channel Form -->
+			 <div class="checkPer" *ngIf="user.permissions >= 2">
 			 <form (submit)="createChannel($event)">
 			     <div class="formLabel">Create Channel</div>
 				 <div id="error2"></div>
                  <input class="formInput" name="newChannelName" placeholder="New Channel" id="cha" type="text" [(ngModel)]="newChannelName">
                  <button class="chatButton">Create</button>
              </form>
+			 </div>
 			 <!-- List of Channels -->
+			 <div class="formLabel"></div>
 			 <div class="h2">List</div>
-             <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)"></app-channels>
+			 <div class="formLabel" *ngIf="selectedChannel != null">{{selectedChannel.name}}</div>
+             <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)" (leaveChanged)="leaveChangedHandler($event)"></app-channels>
 		 </div>	    
 	 </div>
      <!-- Chat Column -->
@@ -50,14 +60,19 @@
      <!-- Members Column -->
 	 <div class="userWrap">
          <div class="mainUserContent">
-             <div class="h1">Users</div>
-		         <div class="userlist" *ngIf="selectedChannel != null">
-			         <div class="userOnline" *ngFor="let member of selectedChannel.members">
-				         {{ member }}
-						 <!--<button type="button" class="deleteButton"><i class="fas fa-save"></i></button>-->
-						 <!--<button type="button" class="deleteButton"><i class="fas fa-trash-alt"></i></button>-->
-			         </div>				 
-                 </div>
+         <div class="h1">Members</div>
+			 <div class="footerline"></div>	
+		     <div class="userlist" *ngIf="selectedChannel != null">
+			     <div class="userOnline" *ngFor="let member of selectedChannel.members">
+				     {{ member }}
+					 <div class="checkPer" *ngIf="user.permissions > 1">
+					     <button (click)="updateChannel(selectedChannel, member)" type="submit" name="submit" class="chatButton" style="right: 0;"><i class="fas fa-times"></i></button>
+					 </div>
+			     </div>				 
              </div>
+			 <div class="userlist" *ngIf="selectedChannel == null">
+			     No selected Channels.
+			 </div>
          </div>
+     </div>
  </div>

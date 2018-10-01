@@ -31,13 +31,13 @@ module.exports = function(app, io){
 		 //leave room
 		 socket.on('leaveRoom', function(data){
 			 socket.leave(data);
-			 var string = ' leaved ' + data;
+			 var string = ' left ' + data;
 			 var d = new Date();
 		     var h = d.getHours();
 		     var m = d.getMinutes();
 			 var date = h + ':' + m;
              socket.broadcast.to(data).emit('message', {type:'message', id:data, text:string, user:socket.username, image:null, date:date});	
-             console.log('Leaved channel ' + data);				 
+             console.log('Left channel ' + data);				 
 		 });
 		 //error handeler
 		 socket.on('error', function(err){

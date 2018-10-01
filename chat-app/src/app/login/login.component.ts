@@ -17,11 +17,19 @@ export class LoginComponent implements OnInit {
      }
  
      ngOnInit(){
-         if(sessionStorage.getItem('user') !== null){ //|| localStorage.getItem('user') !== null
+		 //Check if session exist 
+         if(sessionStorage.getItem('user') !== null){ 
              this.router.navigate(['/home']);
-         }
+         }else{
+			 if(localStorage.getItem('user') !== null){
+				 //local storage
+			     var user = JSON.parse(localStorage.getItem('user'));
+				 sessionStorage.setItem('user', user);
+				 this.router.navigate(['/home']);
+			 }
+		 }
      }
-
+     //login in User 
      loginUser(event){
          event.preventDefault();
          console.log('username: ' + this.username);
@@ -29,10 +37,11 @@ export class LoginComponent implements OnInit {
              username: this.username,
              password: this.password
          }
-         if(this.username == null || this.password == null){
+         if(this.username != null || this.password != null){
              this._userService.login(user).subscribe(
                  data => { 
                      console.log(data);
+					 //check if the results are null
                      if(data != null){
                          var temp = JSON.stringify(data);
                          sessionStorage.setItem('user', temp); 
@@ -50,6 +59,7 @@ export class LoginComponent implements OnInit {
                  }
 		     );
 	     } else{
+			 //If input is empty 
 		     var message = 'Input is empty.';
 		     document.getElementById('username').style.border = '2px solid #C70039';
 		     document.getElementById('password').style.border = '2px solid #C70039';

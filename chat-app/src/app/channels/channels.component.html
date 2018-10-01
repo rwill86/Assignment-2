@@ -1,4 +1,6 @@
-<div *ngIf="channels.length == 0" class="h2">No channels available</div>
+<div *ngIf="channels == null" class="formLabel">No channels available.</div>
 <div class="channelListContent" *ngFor="let channel of channels">
-     <button (click)="changeChannel(channel.name)" type="button" class="midButton"><i class="fas fa-arrow-right"></i> {{ channel.name }}</button>
+     <button (click)="changeChannel(channel.name)" type="button" class="midButton"><i class="fas fa-caret-right"></i> {{ channel.name }} Join</button>
+	 <button (click)="exitChannel(channel.name)" type="button" class="deleteButton"><i class="fas fa-caret-left"></i> leave</button>
+	 <!--<button (click)="deleteChannel(channel.name)" type="button" class="deleteButton"><i class="fas fa-trash-alt"></i></button>-->
 </div>

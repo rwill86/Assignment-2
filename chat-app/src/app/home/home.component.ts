@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { GroupService } from '../group/group.service';
+import { ChannelsService } from '../channels/channels.service';
+import { SocketService } from '../socket/socket.service';
 
 @Component({
   selector: 'app-home',
@@ -11,40 +13,50 @@ export class HomeComponent implements OnInit {
      public user;
      public selectedGroup;
      public selectedChannel;
-     public groups = [];
-     public channels = [];
+     public groups;
+     public channels;
      public newGroupName:String;
 	 public newChannelName:String;
 
-     public constructor(private router: Router, private _groupService:GroupService){
+     public constructor(private router: Router, private _groupService:GroupService, private _channelService:ChannelsService, private sockServ:SocketService){
 	 }
 
      public ngOnInit(){
          if(sessionStorage.getItem('user') === null){
-             // User has not logged in, reroute to login
-             this.router.navigate(['/login']);
+             if(localStorage.getItem('user') !== null){
+			     //local storage
+			     var user = JSON.parse(localStorage.getItem('user'));
+				 sessionStorage.setItem('user', user);
+                 this.user = user;
+                 console.log(this.user);
+				 this.getGroups();
+		     } else{
+                 // User has not logged in, re-route to login
+			     console.log('Not validated.');
+			     sessionStorage.clear();
+                 this.router.navigate(['/login']);
+			 }
          } else{
+			 //Session storage
              var user = JSON.parse(sessionStorage.getItem('user'));
              this.user = user;
              console.log(this.user);
-             this.groups = user.groups;
-             if(this.groups.length > 0){
-                 this.openGroup(this.groups[0].name);
-                 if(this.groups[0].channels > 0){
-                     this.channelChangedHandler(this.groups[0].channels[0].name);
-                 }
-             }
-         }
+			 this.getGroups();
+         }		 
      }
-
+     //Create group
      public createGroup(event){
          event.preventDefault();
-         var data = {'newGroupName': this.newGroupName};
 		 if(this.newGroupName != null){
+			 var data = {'newGroupName': this.newGroupName};
              this._groupService.createGroup(data).subscribe(
                  data => { 
                      console.log(data);
+					 this.newGroupName = '';
+					 document.getElementById('gro').style.border = '';	
+					 document.getElementById('error').innerHTML = '';
                      this.getGroups();
+					 return true;
                  },
                  error => {
                      console.error(error);
@@ -56,15 +68,65 @@ export class HomeComponent implements OnInit {
              document.getElementById('error').innerHTML = '' + em + '';
 		 }
      }
-	 
+     //Delete Group
+     public deleteGroup(groupName){
+         this._groupService.deleteGroup(groupName, this.user.username).subscribe(
+             data =>{
+                 this.getGroups();
+				 return true;
+             }, error =>{
+                 console.error(error);
+             }
+		 )
+     }
+     //Get Group
+     public getGroups(){
+         var u = {
+             'username': JSON.parse(sessionStorage.getItem('user')).username
+         }
+         this._groupService.getGroups(u).subscribe(
+             data =>{
+                 console.log('getGroups()');
+                 console.log(data);
+                 this.groups = data;
+				 return true;
+             }, 
+             error => {
+                 console.error(error);
+             }
+         )
+     }
+	 //Get Channels
+	 public getChannels(){
+         var u = {
+             'username': JSON.parse(sessionStorage.getItem('user')).username,
+			 'groupname': this.selectedGroup.name
+         }
+         this._channelService.getChannels(u).subscribe(
+             data =>{
+                 console.log('getChannels()');
+                 console.log(data);
+                 this.channels = data;
+				 return true;
+             }, 
+             error => {
+                 console.error(error);
+             }
+         )
+     }
+	 //Create Channel
 	 public createChannel(event){
-         event.preventDefault();
-         var data = {'newChannelName': this.newGroupName};
-		 if(this.newGroupName != null){
-             this._groupService.createGroup(data).subscribe(
+         event.preventDefault();        
+		 if(this.newChannelName != null){
+			 var data = {'newChannelName': this.newChannelName, 'group': this.selectedGroup.name};
+             this._channelService.createChannel(data).subscribe(
                  data => { 
                      console.log(data);
-                     this.getGroups();
+					 this.newChannelName = '';
+					 document.getElementById('cha').style.border = '';	
+					 document.getElementById('error2').innerHTML = '';
+                     this.getChannels();
+					 return true;
                  },
                  error => {
                      console.error(error);
@@ -76,31 +138,40 @@ export class HomeComponent implements OnInit {
              document.getElementById('error2').innerHTML = '' + em + '';
 		 }
      }
-
-     public deleteGroup(groupName){
-         this._groupService.deleteGroup(groupName, this.user.username).subscribe(
-             data =>{
-                 this.getGroups();
-             }, error =>{
-                 console.error(error)
-             }
-		 )
-     }
-
-     public getGroups(){
-         var data = {
-             'username': JSON.parse(sessionStorage.getItem('user')).username
-         }
-         this._groupService.getGroups(data).subscribe(
-             data =>{
-             console.log('getGroups()');
-             console.log(data);
-             this.groups = data['groups'];
-             }, 
-             error => {
-                 console.error(error);
+	 //update Channel
+	 public updateChannel(channel, member){
+		 var newmember = [];
+		 for(var i = 0; i < channel.members.length; i++){
+			 if(channel.members[i] != member){
+				 newmember.push(channel.members[i]);
+			 }
+		 }
+		 var newchannel = {
+			 _id: channel._id,
+			 name: channel.name,
+             group: channel.group,
+             members: newmember
+		 }
+		 this._channelService.updateMembers(newchannel).subscribe(
+             data => {
+                 this.getChannels();
+				 return true;
+             },
+             error =>{
+                 console.error('Error saving channel');
              }
          )
+	 }
+	 //Delete Channel
+     public deleteChannel(channelName){
+         this._channelService.deleteChannel(channelName, this.user.username).subscribe(
+             data =>{
+                 this.getChannels();
+				 return true;
+             }, error =>{
+                 console.error(error);
+             }
+		 )
      }
      //logout
      public logout(){
@@ -108,7 +179,7 @@ export class HomeComponent implements OnInit {
 		 localStorage.clear();
          this.router.navigate(['/login']);
      }
-	 
+	 //route to user component 
 	 public userAccount(){
 		 this.router.navigate(['/user']);
 	 }
@@ -117,25 +188,37 @@ export class HomeComponent implements OnInit {
          console.log(name);
          for(var i = 0; i < this.groups.length; i++){
              if(this.groups[i].name == name){
-                 this.selectedGroup = this.groups[i];
+                 this.selectedGroup = this.groups[i];				 
              }
-         }
-         this.channels = this.selectedGroup.channels;
+         }	 
+		 //get channels
+		 this.getChannels(); 
      }
      // Responsible for handling the event call by the child component
      public channelChangedHandler(name){
          var found:boolean = false;
+		 if(this.selectedChannel != null){
+			 //leave channel
+			 console.log('Left channel');
+		     this.sockServ.leaveRoom(this.selectedChannel.name);
+         }		 
          for(var i = 0; i < this.channels.length; i++){
              if(this.channels[i].name == name){
-                 this.selectedChannel = this.channels[i];
+				 //Join channel
+				 console.log('Joined channel');
+                 this.selectedChannel = this.channels[i];				 
+				 this.sockServ.joinRoom(name);				 
                  found = true;
              }
          }
          return found;    
 	 }
 	 
-     public getChannels(groupName){
-         var channels = [];
-         return channels;
-     }
+	 public leaveChangedHandler(name){
+		 if(this.selectedChannel != null){
+			 //leave channel
+			 console.log('Left channel');
+		     this.sockServ.leaveRoom(this.selectedChannel.name);
+         }		 
+	 }
 }

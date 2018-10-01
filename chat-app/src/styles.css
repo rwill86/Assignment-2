@@ -311,6 +311,11 @@ input[type="file"]{
     border-radius: 5px;
 	overflow: hidden;
 }
+
+/* footerLine style */
+.footerline{
+	 border: 1px solid #C70039; 
+}
 /* .message-box style */
 .messageImage{
 	position: relative;

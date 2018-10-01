@@ -1,7 +1,0 @@
-{"users":[{"username":"ritchie","password":"pass", "userLogo":"logo1.PNG","permissions":2},
-{"username":"super","password":"super","userLogo":"logo1.PNG","permissions":2},
-{"username":"group","password":"pass","userLogo":"logo2.PNG","permissions":1},
-{"username":"member1","password":"pass","userLogo":"logo2.PNG","permissions":0},
-{"username":"member2","password":"pass","userLogo":"logo2.PNG","permissions":0}],
-"groups":[{"name":"2811ICT","admins":["super"],"members":["member1","ryoma"]}],
-"channels":[{"name":"Events","group":"Griffith Innovate","members":["ryoma","member1","group"]},{"name":"Admin Chat","group":"Griffith Innovate","members":["ryoma"]},{"name":"Lab Help","group":"2811ICT","members":["ryoma","member1","member2"]},{"name":"Assignment Help","group":"2811ICT","members":["member1","member2"]}]}

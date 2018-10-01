@@ -19,16 +19,16 @@ export class GroupService {
 
      constructor(private http:HttpClient){		 
 	 }
-
+     //Create Group
      public createGroup(data){
          var body = JSON.stringify(data);
          return this.http.post(this.api + 'group/create', body, httpOptions);
      }
-
+     //Delete Group
      public deleteGroup(groupName, username){
          return this.http.delete(this.api + 'group/delete/' + groupName);
      }
-	 
+	 //Get Groups
      public getGroups(data){
          var body = JSON.stringify(data);
          return this.http.post(this.api + 'groups', body, httpOptions);

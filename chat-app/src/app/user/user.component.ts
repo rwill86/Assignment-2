@@ -15,6 +15,7 @@ export class UserComponent implements OnInit{
 	 public userss;
 	 public username;
 	 public password;
+	 public email;
 	 public selectedfile = null;
 	 public imagepath;
 	 public imagesize;
@@ -24,9 +25,20 @@ export class UserComponent implements OnInit{
 
      public ngOnInit(){
 		 if(sessionStorage.getItem('user') === null){
-             // User has not logged in, reroute to login
-             this.router.navigate(['/login']);
+             if(localStorage.getItem('user') !== null){
+			     //local storage
+			     var user = JSON.parse(localStorage.getItem('user'));
+				 sessionStorage.setItem('user', user);
+                 this.user = user;
+                 console.log(this.user);
+		     } else{
+                 // User has not logged in, re-route to login
+			     console.log('Not validated.');
+			     sessionStorage.clear();
+                 this.router.navigate(['/login']);
+			 }
          } else{
+			 //Session storage
              var user = JSON.parse(sessionStorage.getItem('user'));
              this.user = user;
              console.log(this.user);
@@ -60,6 +72,7 @@ export class UserComponent implements OnInit{
 			         _id: this.user._id,
                      username: this.user.username,
                      password: this.user.password,
+					 email: this.user.email,
 			         userLogo: this.imagepath,
 			         permissions: this.user.permissions
                  }
@@ -67,9 +80,12 @@ export class UserComponent implements OnInit{
 			     var temp = JSON.stringify(u);
                  sessionStorage.setItem('user', temp); 
                  localStorage.setItem('user', temp);
+				 var newimage = document.getElementById('imageID') as HTMLImageElement;
+				 newimage.src = 'images/' + this.imagepath + '';
 				 document.getElementById('errorImage').innerHTML = '';
 				 return true;
-		     }); 	
+		     }); 
+             this.getUsers();	 
 		 } else{
 			 document.getElementById('img').style.border = '2px solid #C70039';		 
 			 var em = 'File is empty.';
@@ -87,20 +103,25 @@ export class UserComponent implements OnInit{
              () => console.log('done loading users')			 
 		 );
 	 }
-	 
-	 public createUser(username, password){	 
+	 //create User
+	 public createUser(username, password, email){	 
 		 var user = {
              username: username,
              password: password,
-			 userLogo: '',
+			 email: email,
+			 userLogo: 'logo1.PNG',
 			 permissions: 0,
          }
-		 if(username != null && password != null){
+		 if(username != null && password != null && email != null){
 		     this.userServ.create(user).subscribe(
                  data => { 
 			         this.username = '';
 				     this.password = '';
+					 this.email = '';
                      this.getUsers();
+					 document.getElementById('use').style.border = '';
+			         document.getElementById('pas').style.border = '';
+					 document.getElementById('ema').style.border = '';
 					 document.getElementById('error').innerHTML = '';
                      return true;
                  },
@@ -111,23 +132,38 @@ export class UserComponent implements OnInit{
 		 } else{
 			 document.getElementById('use').style.border = '2px solid #C70039';
 			 document.getElementById('pas').style.border = '2px solid #C70039';
+			 document.getElementById('ema').style.border = '2px solid #C70039';
 			 var em = 'Inputs are empty.';
              document.getElementById('error').innerHTML = '' + em + '';
 		 }
 	 }
-	 
+	 //update User
 	 public updateUser(user){
-		 this.userServ.update(user).subscribe(
-             data => {
-                 this.getUsers();
-                 return true;
-             },
-             error =>{
-                 console.error('Error saving user');
-             }
-         )
+		 if(user.username != null || user.password != null  || user.email != null){
+		     this.userServ.update(user).subscribe(
+                 data => {
+                     this.getUsers();
+					 var id = user._id;
+					 document.getElementById(id).style.border = '';
+			         document.getElementById(id).style.border = '';
+					 document.getElementById(id).style.border = '';
+                     document.getElementById('error').innerHTML = '';
+                     return true;
+                 },
+                 error =>{
+                     console.error('Error saving user');
+                 }
+             )
+	     } else{
+			 var id = user._id;
+			 document.getElementById(id).style.border = '2px solid #C70039';
+			 document.getElementById(id).style.border = '2px solid #C70039';
+			 document.getElementById(id).style.border = '2px solid #C70039';
+			 var em = 'Inputs are empty.';
+             document.getElementById('error').innerHTML = '' + em + '';
+		 }
 	 }
-	 
+	 //delete User
 	 public deleteUser(data){
 		 this.userServ.deleteUser(data).subscribe(
              data => {

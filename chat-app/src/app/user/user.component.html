@@ -7,11 +7,12 @@
      <div class="groupWrap">
          <div class="mainGroupContent">
 	     <!-- Groups Section -->
-	         <div class="h1">Account</div> 
-			 <div class="h2">Username: {{user.username}}</div> 		
-			 <div class="formLabel">Permissions: {{user.permissions}}</div> 	
-             <div class="userBiglogo">
-				 <img src="images\{{user.userLogo}}" alt="userLogo"/>
+	         <div class="h1">Account</div>
+             <div class="footerline"></div>	
+             <div class="h2">This is your account information</div>		 
+		 
+             <div class="userBiglogo" >
+				 <img src="images\{{user.userLogo}}" id="imageID" alt="userLogo"/>
 		     </div>	
              <div id="errorImage"></div>			 
 		     <form>		     
@@ -20,34 +21,53 @@
 				 </label>
 		         <button (click)="onUpload()" type="submit" name="submit" class="chatButton">Upload</button>
 		     </form>
+			 <div class="formLabel">Username: {{user.username}}</div> 		
+			 <div class="formLabel">Permissions: {{user.permissions}}</div> 
+             <div class="formLabel">Email: {{user.email}}</div>	
 		 </div>
      </div>		 	 
-	 <div class="groupWrap" if="user.permissions == 2;">
+	 <div class="groupWrap">
          <div class="mainGroupContent">
 		     <div class="h1">User List</div> 
+			 <div class="footerline"></div>	
+			 <div class="checkPer" *ngIf="user.permissions == 2">
 			 <div class="userList" *ngFor="let u of userss;">	
                  <div class="h2">UserID: {{u._id}}</div>
                  <div class="userBiglogo">
 				     <img src="images\{{u.userLogo}}" alt="userLogo"/>
 		         </div>					 
 			     <div class="formLabel">Username</div>
-			     <input type="text" class="formInput" name="username" [(ngModel)]="u.username" placeholder="{{u.username}}"/>
+			     <input type="text" class="formInput" id="{{u._id}}" name="username" [(ngModel)]="u.username" placeholder="{{u.username}}"/>
 				 <div class="formLabel">Password</div>
-				 <input type="password" class="formInput" name="password" [(ngModel)]="u.password" placeholder="{{u.password}}"/>
+				 <input type="password" class="formInput" id="{{u._id}}" name="password" [(ngModel)]="u.password" placeholder="{{u.password}}"/>
+				 <div class="formLabel">Email</div>
+				 <input type="email" class="formInput" id="{{u._id}}" name="email" [(ngModel)]="u.email" placeholder="{{u.email}}"/>
 			     <button (click)="updateUser(u)" type="submit" name="submit" class="chatButton"><i class="fas fa-save"></i> Save</button>
                  <button (click)="deleteUser(u)" type="submit" name="submit" class="chatButton"><i class="fas fa-trash-alt"></i> Delete</button>
+			 </div>
+			 </div> 
+			 <div class="checkPer" *ngIf="user.permissions != 2">
+                 <div class="formLabel">You don't have permission to view the user list.</div>			 
 			 </div>
 		 </div>
 	 </div>
 	 <div class="groupWrap">
          <div class="mainGroupContent">
-		     <div class="h1">Create User</div> 
-			 <div class="h2">Make a new user</div> 	
+		     <div class="h1">Create User</div>
+             <div class="footerline"></div>				 
+			 <div class="h2">Make a new user</div> 
+             <div class="checkPer" *ngIf="user.permissions >= 1">			 
 			 <div id="error"></div>
 				 <div class="formLabel">Username</div>
 			     <input type="text" class="formInput" name="username" id="use" [(ngModel)]="username" placeholder="Username"/>
+				 <div class="formLabel">Email</div>
+			     <input type="email" class="formInput" name="email" id="ema" [(ngModel)]="email" placeholder="Email"/>
 			     <div class="formLabel">Password</div>
 	             <input type="password" class="formInput" name="password" id="pas" [(ngModel)]="password" placeholder="Password"/>
-	             <button (click)="createUser(username, password)" type="submit" name="submit" class="chatButton">Create</button>
+	             <button (click)="createUser(username, password, email)" type="submit" name="submit" class="chatButton">Create</button>
+			 </div>
+			 <div class="checkPer" *ngIf="user.permissions == 0">
+                 <div class="formLabel">You don't have permission to create a user.</div>			 
+			 </div>
 		 </div>
 	 </div>

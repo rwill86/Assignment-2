@@ -1,24 +1,28 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SocketService } from '../socket/socket.service';
 
 @Component({
      selector: 'app-channels',
      templateUrl: './channels.component.html',
      styleUrls: ['./channels.component.css']
 })
-export class ChannelsComponent implements OnInit {
+export class ChannelsComponent implements OnInit{
      @Input() channels;
      @Input() group;
      @Output() channelChanged: EventEmitter<string> = new EventEmitter();
-
-     public constructor(private sockServ:SocketService){ 
+	 @Output() leaveChanged: EventEmitter<string> = new EventEmitter();
+	 
+     public constructor(){ 
 	 }
 
      public ngOnInit(){
+	 
      }	 
-
+     //Change Channel
      public changeChannel(name){
-         this.channelChanged.emit(name);
-		 this.sockServ.joinRoom(name);	    
+         this.channelChanged.emit(name);		 
+     }	 
+	 //exit Channel
+     public exitChannel(name){
+         this.leaveChanged.emit(name);		 
      }
 }

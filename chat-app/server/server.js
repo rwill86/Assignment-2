@@ -20,8 +20,6 @@ var corsOptions = {
   origin: 'http://localhost:4200',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 };
-// Group Module
-const groups = require('./groups.js')();
 
 app.use(cors(corsOptions))
 // Body-Parser
@@ -60,6 +58,7 @@ app.get('/db/install', function(req, res){
          var dbo = db.db('users');
 		 var dboc = db.db('channels');
 		 var dbog = db.db('groups');
+		 var dbochat = db.db('chats');
 
          // Drop collection
          dbo.collection('users').drop(function(err, delOk){
@@ -98,12 +97,24 @@ app.get('/db/install', function(req, res){
 			 }
          });
 		 
+		 dbochat.collection('chats').drop(function(err, delOk){
+             if(err){
+                 console.log('ERROR: failed drop collection chats');
+                 if(verbose){
+					 console.log(err);
+				 } 
+             };
+             if(delOk){
+				 console.log('SUCCESS: dropped collection chats');
+			 }
+         });
+		 
 		 var udata = [
-             { username: 'Ritchie', password: 'pass', userLogo:'logo1.PNG', permissions:2 },
-             { username: 'super', password: 'super', userLogo:'logo1.PNG', permissions:2 },
-             { username: 'group', password: 'group', userLogo:'logo2.PNG', permissions:1 },
-             { username: 'Jim', password: '2', userLogo:'logo2.PNG', permissions:0 },
-			 { username: 'Mary', password: '1', userLogo:'logo2.PNG', permissions:0 }
+             { username: 'Ritchie', email: 'ritchie@Gmail.com', password: 'pass', userLogo:'logo1.PNG', permissions:2 },
+             { username: 'super', email: 'super@Gmail.com', password: 'super', userLogo:'logo1.PNG', permissions:2 },
+             { username: 'group', email: 'group@Gmail.com', password: 'group', userLogo:'logo2.PNG', permissions:1 },
+             { username: 'Joe', email: 'rogan@Gmail.com', password: '2', userLogo:'logo2.PNG', permissions:0 },
+			 { username: 'Alex', email: 'jones@infowars.com', password: '1', userLogo:'logo2.PNG', permissions:0 }
          ];
 		 
 		 var cdata = [
@@ -117,6 +128,12 @@ app.get('/db/install', function(req, res){
              { name: 'Griffith Innovate', admins: ['Ritchie'], members: ['Ritchie','Mary','group'] },
              { name: '2811ICT', admins: ['super'], members: ['Ritchie','Jim'] },
              { name: '1701ICT', admins: ['group'], members: ['Mary'] }
+         ];
+		 
+		  var chatdata = [
+             { channel: 'Events', text: 'Hello', user: 'Ritchie', image: '', date: '12:00' },
+             { channel: 'Events', text: 'bye', user: 'super', image: '', date: '01:15' },
+             { channel: 'Lab Help', text: 'Welcome', user: 'group', image: '', date: '08:30' }
          ];
 		 
          dbo.collection('users').insertMany(udata, function(err, res){
@@ -140,6 +157,13 @@ app.get('/db/install', function(req, res){
              console.log('Inserted ' + res.insertedCount + ' documents to channels');
          });
 		 
+		 dbochat.collection('chatss').insertMany(chatdata, function(err, res){
+             if(err){
+				 throw err;
+			 }
+             console.log('Inserted ' + res.insertedCount + ' documents to chats');
+         });
+		 
 		 dbo.collection('users').find({}).toArray(function(err, result){
              if(err){
 				 throw err;
@@ -161,8 +185,9 @@ app.post('/api/user', function (req, res) {
      var newUser = {
          'username': req.body.username,
          'password': req.body.password,
+		 'email': req.body.email,
 		 'userLogo': 'logo1.PNG',
-		 'permissions': 0
+		 'permissions': 1
      }
      writer.addUser(newUser, res);
 });
@@ -183,87 +208,66 @@ app.post('/api/login', function(req, res){
 	 var login = require('./login.js')(MongoClient, dbURL);
 	 var username = req.body.username;
      var password = req.body.password;	
-	 console.log('u: ' + username  + ' p: ' + password);
-     var match = login.getLogin(username, password, res);
-     //fs.readFile(dataFile, dataFormat, function(err, data){
-		 //data = JSON.parse(data);
-	     //if(match !== null){
-		     //groups.data = data;
-	         //match.groups = groups.getGroups(username, 2);
-	     //}	
-     //});	 
+	 console.log('username: ' + username  + ' password: ' + password);
+     login.getLogin(username, password, res);
 });
 // Group APIs
 app.post('/api/groups', function(req, res){
      // We want to authenticate again -- usually you'd use a token
-     //fs.readFile(dataFile, dataFormat, function(err, data){
-         //data = JSON.parse(data);
-         //var username = req.body.username; 
-         //login.data = data;
-         //let match = login.findUser(username);    
-         // Check to see if we got a match, get groups if true
-         //if(match !== false){
-             //groups.data = data;
-             //match.groups = groups.getGroups(username, match.permissions);
-         //}
-         //res.send(match);
-     //});
-	 fs.readFile(dataFile, dataFormat, function(err, data){
-		 data = JSON.parse(data);
-	     var loginn = require('./login.js')(MongoClient, dbURL);
-	     var username = req.body.username;
-         var password = req.body.password;	
-	     console.log('u: ' + username  + ' p: ' + password);
-         let match = loginn.getLogin(username, password, res);
-	     console.log('Object' + match);
-	     if(match !== null){
-		     console.log('testing');
-		     groups.data = match;
-	         match.groups = groups.getGroups(username, match.permissions);
-	     }	
-     });	 
+	 var reader = require('./read.js')(MongoClient, dbURL);
+     reader.getGroups(res);
+	 console.log('Got Groups.');
 });
 
 app.delete('/api/group/delete/:groupname', function(req, res){
      var groupName = req.params.groupname;
-     // Read the JSON file to get the current data
-     fs.readFile(dataFile, dataFormat, function(err, data){
-         var readData = JSON.parse(data);
-         groups.data = readData.groups;
-         readData.groups = groups.deleteGroup(groupName);
-         console.log(readData);
-         var json = JSON.stringify(readData);
-         // Write the updated data to JSON
-         fs.writeFile(dataFile, json, dataFormat, function(err, d){
-             res.send(true);
-             console.log('Deleted group: ' + groupName);
-         });
-     });
+     var deleter = require('./remove.js')(MongoClient, dbURL);
+     deleter.removeGroup(groupName, res);
+     console.log('Deleted group: ' + groupName);
 });
 
 app.post('/api/group/create', function(req, res){
-     var groupName = req.body.newGroupName
-     if(groupName == '' || groupName == 'undefined' || groupName == null){
-         res.send(false);
-     } else {
-        // Read the JSON file to get an updated list of groups
-        fs.readFile(dataFile, dataFormat, function(err, data){
-             var readData = JSON.parse(data);
-             var g = readData.groups;    
-             var newGroup = {
-                 'name': req.body.newGroupName,
-                 'admins':[],
-                 'members':[]
-             }
-             g.push(newGroup);
-             readData.groups = g;
-             var json = JSON.stringify(readData);      
-             // Write the updated data to the JSON file.
-             fs.writeFile(dataFile, json, dataFormat, function(err, data){
-                 res.send(true);
-                 console.log('Created new group: ' + req.body.newGroupName);
-             });
-         });
+     var groupName = req.body.newGroupName;
+	 var writer = require('./add.js')(MongoClient, dbURL);
+     var newGroup = {
+         'name': groupName,
+         'admins':[],
+         'members':[]
      }
-})
+	 writer.addGroup(newGroup, res);
+     console.log('Created new group: ' + req.body.newGroupName);
+});
+// Channel APIs
+app.post('/api/channels', function(req, res){
+	 var groupname = req.body.groupname;
+	 var reader = require('./read.js')(MongoClient, dbURL);
+     reader.getChannels(groupname, res);
+	 console.log('Got channels.');
+});
+
+app.delete('/api/channel/delete/:channelname', function(req, res){
+     var channelName = req.params.groupname;
+     var deleter = require('./remove.js')(MongoClient, dbURL);
+     deleter.removeChannel(channelName, res);
+     console.log('Deleted channel: ' + channelName);
+});
+
+app.post('/api/channel/create', function(req, res){
+     var channelName = req.body.newChannelName;
+	 var groupName = req.body.group;
+	 var writer = require('./add.js')(MongoClient, dbURL);
+     var newChannel = {
+         'name': channelName,
+         'group': groupName,
+         'members':[]
+     }
+	 writer.addChannel(newChannel, res);
+     console.log('Created new channel: ' + channelName);
+});
+
+app.put('/api/channel/:channel', function (req, res){
+     console.log('update Channel');
+     var updater = require('./update.js')(MongoClient, dbURL);
+     updater.updateChannel(req.body, res);
+});
  
