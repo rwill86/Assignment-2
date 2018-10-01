@@ -270,4 +270,12 @@ app.put('/api/channel/:channel', function (req, res){
      var updater = require('./update.js')(MongoClient, dbURL);
      updater.updateChannel(req.body, res);
 });
- 
+//Chat API
+app.post('/api/chats', function(req, res){
+});
+
+app.post('/api/chats/create', function(req, res){
+});
+
+app.post('/api/chats/image', function(req, res){
+});

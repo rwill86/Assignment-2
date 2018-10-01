@@ -14,6 +14,7 @@ module.exports = function(MongoClient, dbURL){
                  $set: {
                      username: user.username,
                      password: user.password,
+					 email: user.email,
 					 userLogo: user.userLogo
                  }
              }

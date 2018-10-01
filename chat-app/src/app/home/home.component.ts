@@ -219,6 +219,7 @@ export class HomeComponent implements OnInit {
 			 //leave channel
 			 console.log('Left channel');
 		     this.sockServ.leaveRoom(this.selectedChannel.name);
+			 this.selectedChannel == null;
          }		 
 	 }
 }

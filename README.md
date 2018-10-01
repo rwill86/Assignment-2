@@ -15,11 +15,12 @@ Run the NODE.JS server ```node server.js``` and the Angular client ```ng serve``
 ## Testing
 To test the NODE.JS firstly install ```npm install mocha``` edit json file to add ```mocha``` then run the command ```npm test``` on server.
 ## Error Notes
+Display errors when removing  a member.
 ## Author
 Ritchie Wils, s2967766
 
-##Documentation
-##Git
+## Documentation
+## Git
 myGit is an open source software which tracks changes witin files which is useful among multiple people doing coordinating work on one big development project.
 GIT respositroy was create with a readme file with instruction of how to run,install and test with mocha in the appilcation.
 Shortly after the respositroy was cloned to the local user side then started working  on the development progress.
@@ -27,7 +28,7 @@ Creating new and multiple branches for each fucntion then doing a checkout for d
 Git was layout to be pushed to the origin master branch each day for consistency and to have a back up on the cloud service of myGit to keep the files organized if anything happened.
 No errors or merge conflicts happened while pushing branches to the myGit.
 
-##Data Structures
+## Data Structures
 The data stuctures system is very important part of making this chat appilcation during delevopment so we know what system to work with.
 Mongodb Database was chosen for this as it works well with NODE.JS to store the main data on the user-end side as it was easy and simple to implement and replace json data.
 Mongodb was installed into the npm packages so NODE.JS could use the functionality of this database package.
@@ -37,15 +38,15 @@ Session and local storage properties were used to store the user information lik
 These can be destroyed if the user leaves the site such as sessions or the user logout of the appilcation which will clear both data storages.
 Arrays and Objects data were used in many parts in the site such as the user allowing more options with the other data structures. 
 
-##Rest API
+## Rest API
 REST API is an internet protocol that allows the end-user to connection and transfer data across two ports backwards and forwards such as NODE.JS and Angular. 
 API can do Get and Post Requests this is useful in creating API for User, Groups and Channels in the development. 
 The User API had multiple functions such us adding, updating, finding and deleting showing the ability to quickly demonstrate the use of mongodb databases with API.
-API update used the User's unique identification then was parse through the API post request handling the data into a fucntion which put that data into mongodb database.
-The other Request is API Add  which creates a new user object that automatically is assigned with an unique identification made in mongodb then stored.
-These functions were similarly done with with Channels and Groups API with mongodb database as the only thing that was different was dealing with members within the data structure in mongodb.
+API update uses the User's unique identification then was parse through the API post request handling the data into a fucntion which put that data into mongodb database and return the value of true if successful with updating.
+The other Request in the API is API Add which creates a new user object that returns true. The user data will be automatically assigned with an unique identification made in mongodb then stored.
+These functions were similarly done with with Channels and Groups API with mongodb database as the only thing that was different was dealing with members within the data structure in mongodb. 
 
-##Angular Architecture
+## Angular Architecture
 The Angular architecture is quite an important part of the development as it communicates with the end-user from the client-side. 
 Angular port of localhost:4200 during development testing and error were removed throught the development of chat appilcation. 
 The User compontent was generated as hadn't been made yet. Angular system directly gives us the options to upload images dircely to server-side folder which gives the ability to update logos and send photos.

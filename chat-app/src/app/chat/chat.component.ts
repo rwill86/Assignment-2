@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit {
      @Input() channel;
 	 public user
 	 public messages = [];
-	 public message:string;
+	 public message;
 	 public errors = [];
 	 public connection;
 	 public selectedfile = null;
@@ -44,6 +44,8 @@ export class ChatComponent implements OnInit {
 			 this.setUser(this.user.username);
 		 }
 		 this.getMes();
+		 this.message = '';
+		 return true;
      }
 	 //Upload image
 	 public onFileSelected(event){
@@ -59,21 +61,24 @@ export class ChatComponent implements OnInit {
 				 console.log('Sending Photo.');
 			     this.sockServ.addImage(this.imagepath, 'Lobby');
 			     this.getMes();
+				 return true;
 			 } else{
 				 console.log('Sending Photo.');
 				 id = 'Lobby';
 				 this.sockServ.addImage(this.imagepath, 'Lobby');
 			     this.getMes();
+				 return true;
 			 }
 		 }); 
 	 } 	 
 	 //setUser
 	 public setUser(data){
 		 this.sockServ.setUser(data);
+		 return true;
 	 }
 	 //Send and get messages
 	 public getMes(){
-		 this.connection = this.sockServ.getMessages().subscribe((message:string) => {
+		 this.connection = this.sockServ.getMessages().subscribe((message) => {
 			 this.messages.push(message);
 			 this.message = '';
 			 return true;
@@ -83,25 +88,26 @@ export class ChatComponent implements OnInit {
 	 public sendMessage(){
 		 console.log('messsage: ' + this.message);
 		 //Check if message is null
-		 if(this.message != null){
+		 if(this.message != null || this.message != ''){
 			 var id = '';
 			 if(this.channel != null){
 				 console.log('Sending message.');
 				 id = this.channel.name;
 		         this.sockServ.sendMessages(this.message, id);
+				 this.getMes();
+				 return true;
 			 } else{
 			     console.log('Sending message.');
 				 id = 'Lobby';
-		         this.sockServ.sendMessages(this.message, id);			 
+		         this.sockServ.sendMessages(this.message, id);	
+                 this.getMes();	
+                 return true;				 
 			 }
-			 this.getMes();
-			 return true;
 	     } else{
 			 document.getElementById('mes').style.border = '2px solid #C70039';
 			 var em = 'Can not send message.';
              document.getElementById('error3').innerHTML = '' + em + '';
-		 }
-		 
+		 }		 
 	 }		 
 	 //Join and exit rooms	 
 	 public joinRoom(){
@@ -123,6 +129,7 @@ export class ChatComponent implements OnInit {
 		     console.log(data);
 			 data = this.channel.name;
 		     this.sockServ.leaveRoom(data);
+			 this.channel == null;
 		 }
 	 }
 	 //Destory connection

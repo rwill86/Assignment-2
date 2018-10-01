@@ -3,9 +3,9 @@ module.exports = function(app, io){
 	 var clients = 0;
 	 var room = 1;
 	 io.on('connection', (socket) => {
-		 clients++;
-		 console.log('user connection');
 		 //lobby
+		 clients++;
+		 console.log('user connection');	 
 		 socket.join('Lobby');
 		 socket.username = 'anonymous';
 		 //setUser
@@ -15,7 +15,7 @@ module.exports = function(app, io){
 		 });
 		 //typing
 		 socket.on('typing', function(data){
-			 socket.broadcast.emit('typing', {username: socket.username});
+			 socket.broadcast.to(data).emit('typing', {username: socket.username});
 		 });
 		 //join room
 		 socket.on('addRoom', function(data){
@@ -26,7 +26,8 @@ module.exports = function(app, io){
 		     var m = d.getMinutes();
 			 var date = h + ':' + m;			 
              socket.broadcast.to(data).emit('message', {type:'message', id:data, text:string, user:socket.username, image:null, date:date});
-             console.log('Joined channel ' + data);			 
+             console.log('Joined channel ' + data);	
+             room++;			 
 		 });
 		 //leave room
 		 socket.on('leaveRoom', function(data){
@@ -37,7 +38,8 @@ module.exports = function(app, io){
 		     var m = d.getMinutes();
 			 var date = h + ':' + m;
              socket.broadcast.to(data).emit('message', {type:'message', id:data, text:string, user:socket.username, image:null, date:date});	
-             console.log('Left channel ' + data);				 
+             console.log('Left channel ' + data);	
+             room--;			 
 		 });
 		 //error handeler
 		 socket.on('error', function(err){
@@ -46,7 +48,7 @@ module.exports = function(app, io){
 		 //Disconnect user
 		 socket.on('disconnect', function(){
 			 clients--;
-			 console.log('user disconnect.');			
+			 console.log(socket.username + 'has disconnect.');			
 			 socket.leave('Lobby');
 			 var d = new Date();
 		     var h = d.getHours();
